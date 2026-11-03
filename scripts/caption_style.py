@@ -42,15 +42,28 @@ def caption_intersections(captions, fps, offset, duration):
     return result
 
 
-def apply_style(timeline, plan, run_dir):
+def apply_style(timeline, plan, run_dir, start_index=0, end_index=None):
     fps = plan['timeline']['fps']
     preset = PRESETS[plan['style']['preset']]
+    graphics_scale = 1.0
+    if 'color' in plan:
+        from color_pipeline import GRAPHICS_SCALE
+        graphics_scale = GRAPHICS_SCALE
     events = plan['style'].get('events', [])
     effect_checks = []
+    progressive_checks = []
+    created = 0
     offset = 0
     count = 0
     previews = []
     for index, (item, segment) in enumerate(zip(timeline.GetItemListInTrack('video', 1), plan['segments'])):
+        if index < start_index:
+            count += len(caption_intersections(plan['captions'], fps, offset, int(item.GetDuration())))
+            offset += int(item.GetDuration())
+            continue
+        if end_index is not None and index >= end_index:
+            break
+        require(item.GetFusionCompCount() == 0, 'Clip ya tiene composición; evitar duplicados')
         comp = item.AddFusionComp()
         require(comp is not None, 'No se pudo crear composición Fusion')
         media_in = comp.FindToolByID('MediaIn')
@@ -64,21 +77,36 @@ def apply_style(timeline, plan, run_dir):
         require(transform.ConnectInput('Input', media_in), 'No se pudo conectar zoom')
         transform.SetInput('Size', segment['zoom'])
         require(abs(transform.GetInput('Size') - segment['zoom']) < 0.0001, 'Zoom no aplicado')
+        moving = 'zoom_end' in segment and segment['zoom_end'] != segment['zoom']
+        if moving:
+            require(transform.AddModifier('Size','BezierSpline'), 'No se pudo crear animación de zoom')
+            transform.SetInput('Size', segment['zoom'], local_start)
+            transform.SetInput('Size', segment['zoom_end'], local_start + duration - 1)
+            values = [transform.GetInput('Size', local_start + at) for at in [0, (duration-1)//2, duration-1]]
+            require(abs(values[0]-segment['zoom']) < 0.00001 and abs(values[-1]-segment['zoom_end']) < 0.00001, 'Keyframes de zoom incorrectos')
+            require(min(values[0],values[-1]) <= values[1] <= max(values[0],values[-1]), 'Zoom intermedio inválido')
+            progressive_checks.append({'segment':index+1,'values':values})
         if events:
             from edit_effects import apply_effects
-            checked = apply_effects(transform, events, fps, offset, duration, local_start, segment['zoom'])
+            accent = transform
+            if moving:
+                accent = comp.AddTool('Transform')
+                accent.SetAttrs({'TOOLS_Name':'AIEditor_Accents'})
+                require(accent.ConnectInput('Input',transform), 'No se pudo conectar acento')
+            checked = apply_effects(accent, events, fps, offset, duration, local_start, 1.0 if moving else segment['zoom'])
             effect_checks.append({'segment': index + 1, 'samples': checked})
-        background = transform
+        background = accent if events else transform
         captions = caption_intersections(plan['captions'], fps, offset, duration)
         for caption, start, end in captions:
             count += 1
+            created += 1
             text = comp.AddTool('TextPlus')
             text.SetAttrs({'TOOLS_Name': 'Caption_%03d' % count})
             text_size = preset.get('emphasis_size', preset['size']) if caption['emphasis'] else preset['size']
             for key, value in {'StyledText': caption['text'], 'Font': 'Arial', 'Style': 'Bold',
-                'Size': text_size, 'Center': {1: 0.5, 2: 0.25}, 'Red1': 1.0,
-                'Green1': 0.85 if caption['emphasis'] else 1.0,
-                'Blue1': 0.12 if caption['emphasis'] else 1.0,
+                'Size': text_size, 'Center': {1: 0.5, 2: 0.25}, 'Red1': graphics_scale,
+                'Green1': graphics_scale*(0.85 if caption['emphasis'] else 1.0),
+                'Blue1': graphics_scale*(0.12 if caption['emphasis'] else 1.0),
                 'Enabled2': 1, 'SelectElement': 1, 'ElementShape2': 1, 'Thickness2': preset['outline'],
                 'Red2': 0, 'Green2': 0, 'Blue2': 0, 'Alpha2': 1}.items():
                 text.SetInput(key, value)
@@ -110,7 +138,7 @@ def apply_style(timeline, plan, run_dir):
             require(exported.get('success') and path.is_file(), 'No se pudo exportar fotograma de revisión')
             previews.append(str(path))
         offset += duration
-    return {'preset': plan['style']['preset'], 'caption_nodes': count, 'previews': previews, 'effect_checks': effect_checks}
+    return {'preset': plan['style']['preset'], 'caption_nodes': created, 'previews': previews, 'effect_checks': effect_checks, 'progressive_checks':progressive_checks}
 
 
 def write_srt(captions, fps, path):

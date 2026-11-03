@@ -62,3 +62,6 @@ El usuario habla español e inglés y puede mezclarlos o equivocarse al hablar c
 
 
 Dirección adicional confirmada: edición más alegre y exagerada, palabras importantes de mayor tamaño y contornos más gruesos. Los sonidos aportados en `sonidos/` son medios locales privados; seleccionar y recortar según cortes/remates, en pista SFX independiente, sin tapar la voz. Ante cierres de Resolve, conservar avances, diagnosticar y preferir operaciones MCP separadas. La ejecución nativa con SFX quedó bloqueada explícitamente tras dos fallos Qt observados; no repetirla sin resolver la causa.
+
+
+Para la historia actual, el usuario pidió unos 2–2½ minutos; no es una duración fija para todos los videos. Preferencias de estilo: zooms progresivos con keyframes además de acentos rápidos, y SFX más audibles. Videos iPhone de ambas partes verificados como Rec.2100 HLG: normalizar técnicamente a SDR/Rec.709 antes de afinar el look creativo. El MCP también sufrió un cierre en AddTrack tras Fusion; ya no crear pistas en timelines cargadas. Reutilizar una pista vacía compatible (SFX mono cuando sea necesario) y verificar que no cambió el número de pistas. No declarar resuelta la causa del crash por cambiar de protocolo.

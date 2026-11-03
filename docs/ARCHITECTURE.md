@@ -80,3 +80,10 @@ El plan deberá describir eventos con tiempo, duración, intensidad y referencia
 `prepare_sounds.py` cataloga medios de `sonidos/` y conserva copias PCM cacheadas, sin modificar originales. `sound_edit.py` valida recortes, posiciones, ganancias y fundidos, importa medios y monta una pista SFX separada. El plan v2 admite `audio` opcional. `edit_video.export_draft` se comparte entre ejecución normal y recuperación mediante MCP.
 
 La integración nativa con SFX produjo dos fallos Qt de Resolve y quedó bloqueada en la CLI. Validar sigue disponible; montaje/exportación con sonidos se completaron mediante funciones locales invocadas desde MCP en etapas separadas. No se considera estable ni probada la ruta nativa completa de audio. Los presets sin audio conservan su CLI; los workers tienen timeout externo para no quedar esperando indefinidamente si se pierde Resolve. Contrato y evidencia en `SOUND_WORKFLOW.md`.
+
+
+## Historia multi-fuente y gestión de color
+
+`story_plan.py` añade validación v3 por fuentes identificadas y montaje/verificación de identidad, tiempos y parámetros. Reutiliza validadores v2, `source_ranges` y comprobaciones del ejecutor. `caption_style.apply_style` trabaja por rangos de clips para guardar lotes y añade zoom progresivo con keyframes reales; los acentos quedan en un Transform separado. `color_pipeline.py` configura/verifica el perfil HLG→SDR y adapta solo la luminancia de los gráficos Text+ bajo esa configuración.
+
+La exportación puede iniciar de forma no bloqueante, persistiendo el ID antes de consultar su terminación. Validación CLI sigue disponible; v3 y audio se operan por etapas MCP. Después de otro cierre de AddTrack incluso por MCP, `sound_edit` deja de crear pistas y exige una vacía compatible; `prepare_sounds --channels 1` permite usar pistas mono existentes. La alternativa se verificó en la pieza completa, sin considerar resuelta la causa interna de Qt. Contratos y evidencia en `FULL_STORY_WORKFLOW.md`.

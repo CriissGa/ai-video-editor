@@ -57,17 +57,31 @@ El usuario pidió una edición más alegre/exagerada, palabras importantes mayor
 - DRP reabierto en proyecto separado: 35 textos con borde 0.075 y cinco SFX online conservados. Fotogramas de tres palabras importantes revisados.
 - Veinticuatro pruebas aprobadas, incluida la guardia que impide ejecutar audio por la ruta nativa. Medios originales, copias PCM, transcripción y planes reales siguen fuera de Git.
 
+## Quinto hito: historia completa, zoom gradual y HLG→SDR
+
+El usuario añadió `pruebapart2.MOV`, pidió más volumen de SFX, zoom progresivo con keyframes y revisar la diferencia de color al exportar. La duración final solicitada para esta pieza es 2–2½ minutos.
+
+- Segunda fuente verificada: 43929 frames / 24:24:09, vertical 1080 × 1920/30 fps, seis canales y Rec.2100 HLG/H.265 10-bit, igual perfil HLG que la primera. Transcripción nativa de 775 palabras persistida; primera transcripción reutilizada.
+- Plan v3 multi-fuente implementado y validado, con identidad de fuente por clip. Historia seleccionada: 3659 frames / **2:01.967**, 21 clips, 121 textos y 14 zooms progresivos con keyframes BezierSpline comprobados por valores inicial/intermedio/final. Los acentos rápidos están en un Transform separado.
+- Color base mediante RCM v2: entradas HLG, timeline DaVinci WG/Intermediate, salida Rec.709 Gamma 2.4 con DRT DaVinci y 100 nits. Compensación gráfica verificada de los textos para conservar blanco/amarillo; no se cambia la imagen de cámara con esa compensación. Es base técnica, no look creativo final ni garantía de coincidencia entre todos los reproductores.
+- Nuevo cierre por MCP en AddTrack tras Fusion, 2026-11-03 01:39:55 del equipo. No se perdió el montaje guardado. El usuario reabrió Resolve. Se eliminó AddTrack del adaptador de SFX: se reutilizó A2 mono vacía con copias mono, manteniendo las cinco pistas existentes. La causa Qt no está resuelta; la CLI con audio sigue bloqueada.
+- Nueve SFX a -14/-12 dB, **+6 dB** respecto a la muestra previa; voz -3 dB, fundidos 1/2 frames. Salida AAC estéreo. Efectos mono en esta versión para usar la pista existente.
+- Proyecto final `AIEditor_Test_FullStory_20261103_013802_ff358b40`, timeline `Hair story - complete HLG to SDR`, guardado y abierto en Edit. Artefactos finales en `outputs/full-story/20261103_013802_ff358b40/final/`: MP4, DRP, plan, informe, SRT y fotograma renderizado.
+- Render final Complete al 100 %, 66447 ms; MP4 **126 893 818 bytes**, 1080 × 1920/30 fps/H.264/AAC estéreo. Reimportado: 3659 frames, entrada identificada como **Rec.709 Gamma 2.4**, gamma 2.4. Audio PCM decodificado 122.004 s por relleno AAC, pico de muestra **-2.89 dBFS**, no true peak.
+- DRP reabierto como otro proyecto de prueba: 21 clips, 121 nodos Text+, nueve SFX online, keyframes y configuración RCM conservados. Se revisaron cinco fotogramas de timeline, blanco/amarillo y un fotograma del MP4 final. No se escuchó ni se revisó cada frame del video completo.
+- Treinta pruebas aprobadas. Documentación del contrato y recuperación en `FULL_STORY_WORKFLOW.md`; ejemplos sin texto privado. El render anterior con gráficos apagados se conservó en la carpeta padre y **no es la entrega final**.
+
 ## Límites y pendientes
 
-- Revisar ritmo, exactitud del texto automático, voz y mezcla. El origen identifica HLG y seis canales; no se ha calibrado color ni mezcla perceptual.
+- Revisar ritmo, exactitud del texto automático, voz y mezcla perceptual. HLG→SDR y etiquetas verificados; look creativo, exposición fina y comparación en el dispositivo del usuario aún requieren revisión.
 - La revisión incluye zooms/temblores, pop de palabras importantes y SFX. Siguen pendientes resaltado continuo palabra por palabra, blur y transiciones visuales; mezcla e intensidad final sujetas a revisión del usuario.
 - Los subtítulos son nodos Fusion, no una pista nativa de subtítulos. DRP requiere conservar el original.
-- FPS enteros iguales entre fuente y timeline. Sin reanudación automática de montaje; repetir crea nuevo proyecto/salida. La transcripción sí permite reutilizar caché o continuar un proyecto de transcripción de prueba.
+- FPS enteros iguales entre fuentes y timeline. Montaje v3 por etapas MCP, con guardado por lotes; no hay reanudación automática que rehaga composiciones. La transcripción permite reutilizar caché.
 - No se han medido tokens, costos ni esfuerzo manual. Notion documenta hitos mediante el agente, sin sincronización automática.
 
 ## Siguiente paso
 
-Revisar `outputs/playful/mcp_20261103_011224_b0cb313c/draft.mp4`, especialmente tamaño de palabras y balance voz/SFX. Mantener operaciones de sonidos mediante MCP; diagnosticar la ruta nativa en un hito separado antes de habilitarla. Después ajustar pasajes mixtos contra audio preservando las equivocaciones cómicas.
+Revisar `outputs/full-story/20261103_013802_ff358b40/final/draft.mp4` completo en el dispositivo del usuario: ritmo, balance SFX/voz, subtítulos y color SDR. Afinar look y cortes con sus comentarios. Mantener SFX en pistas vacías compatibles y no usar AddTrack sobre Fusion cargado; diagnosticar ese fallo en un hito separado.
 
 ## Dirección creativa confirmada
 

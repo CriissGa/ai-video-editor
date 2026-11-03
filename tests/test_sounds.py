@@ -72,7 +72,7 @@ class SoundTests(unittest.TestCase):
     def test_native_audio_guard_precedes_connection(self):
         import edit_video
         with patch.object(sys, 'argv', ['edit_video.py', 'plan.json', '--execute']), \
-             patch.object(edit_video, 'load_plan', return_value={'audio': self.audio}), \
+             patch.object(edit_video, 'load_plan', return_value={'schema_version':2,'audio': self.audio}), \
              patch.object(edit_video, 'diagnose') as diagnostic:
             self.assertEqual(edit_video.main(), 1)
             diagnostic.assert_not_called()

@@ -1,0 +1,17 @@
+{
+  "schema_version": 3,
+  "sources": {"part1": "../prueba.MOV", "part2": "../pruebapart2.MOV"},
+  "project_prefix": "AIEditor_Test_StoryExample",
+  "timeline": {"name": "Story example", "width": 1080, "height": 1920, "fps": 30},
+  "output_dir": "../outputs/story-example",
+  "segments": [
+    {"source": "part1", "in_seconds": 0, "out_seconds": 3, "zoom": 1.0, "zoom_end": 1.07},
+    {"source": "part2", "in_seconds": 39, "out_seconds": 42, "zoom": 1.0, "zoom_end": 1.05}
+  ],
+  "captions": [
+    {"in_seconds": 0, "out_seconds": 1.5, "text": "EXAMPLE", "emphasis": false},
+    {"in_seconds": 3, "out_seconds": 4.5, "text": "STORY", "emphasis": true}
+  ],
+  "style": {"preset": "bold-party-v3", "events": []},
+  "color": {"preset": "iphone-hlg-to-sdr-v1"}
+}

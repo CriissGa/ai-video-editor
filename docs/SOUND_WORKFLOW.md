@@ -20,9 +20,9 @@ Campo raíz opcional `audio` con:
 - `dialogue_gain_db`: -12 a 0 dB.
 - `sounds`: 1–40 entradas con `source`, `in_seconds`, `out_seconds`, `at_seconds`, `gain_db`, `fade_in_frames`, `fade_out_frames`.
 
-`source` es WAV PCM16 estéreo/48 kHz; rutas relativas al plan o absolutas. Entrada/salida se refieren al sonido fuente; `at_seconds` se refiere al montaje final. Conversión a frames half-up, intervalo [entrada, salida). Los recortes deben caber en el archivo y en la timeline, no pueden superponerse en la pista SFX. Ganancia -36 a -6 dB, fundidos enteros de 0 a un segundo, cuya suma no exceda la duración del clip. Se valida antes de modificar timeline.
+`source` es WAV PCM16 mono o estéreo/48 kHz; rutas relativas al plan o absolutas. Entrada/salida se refieren al sonido fuente; `at_seconds` se refiere al montaje final. Conversión a frames half-up, intervalo [entrada, salida). Los recortes deben caber en el archivo y en la timeline, no pueden superponerse en la pista SFX. Ganancia -36 a -6 dB, fundidos enteros de 0 a un segundo, cuya suma no exceda la duración del clip. Se valida antes de modificar timeline.
 
-`sound_edit.import_sounds` importa y comprueba FPS. `sound_edit.apply_audio` crea una pista estéreo independiente llamada `AI Editor - SFX`, ajusta voz en A1 y monta recortes con `recordFrame` absoluto. Comprueba duración, offset, posición, ganancia, fundidos y cantidad. `verify_timeline` conserva las comprobaciones del montaje de voz/video y admite solo la pista SFX validada como excepción entre pistas adicionales.
+`sound_edit.import_sounds` importa y comprueba FPS. `sound_edit.apply_audio` reutiliza una pista vacía mono/estéreo compatible y la nombra `AI Editor - SFX`, ajusta voz en A1 y monta recortes con `recordFrame` absoluto. Comprueba duración, offset, posición, ganancia, fundidos y cantidad. `verify_timeline` conserva las comprobaciones del montaje de voz/video y admite solo la pista SFX validada como excepción entre pistas adicionales.
 
 ## Ruta verificada y cierre de Resolve
 
@@ -46,3 +46,8 @@ No se afirma que el flujo nativo completo con audio sea estable. El código sepa
 - DRP reimportado en otro proyecto de prueba: 35 textos, borde grueso y cinco sonidos online conservados. Fotogramas revisados de tres palabras importantes; no se inspeccionó cada frame ni se escuchó el video completo.
 
 Pendiente: revisión humana de tamaño/ritmo, selección sonora y balance voz/SFX. Preservar `prueba.MOV` y las copias WAV usadas por el DRP; `sonidos/`, `outputs/`, transcripciones y planes reales no se publican en Git.
+
+
+## Actualización posterior: evitar AddTrack también por MCP
+
+La historia completa volvió a cerrar Resolve al añadir una pista después de Fusion, esta vez por MCP. El protocolo por sí solo no resuelve el fallo. El adaptador actual **no crea pistas**: exige una vacía compatible y falla si no existe. `prepare_sounds --channels 1` permite reutilizar pistas mono vacías sin alterar los archivos originales ni copias estéreo. La alternativa verificada usa A2 mono y mantiene la salida estéreo; no se considera resuelta la causa Qt. Ver `FULL_STORY_WORKFLOW.md` y el último hito de `STATUS.md`. Los resultados A6/estéreo de los apartados anteriores describen la muestra histórica.

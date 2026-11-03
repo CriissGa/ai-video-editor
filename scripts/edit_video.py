@@ -40,9 +40,16 @@ def load_plan(path):
             result[key] = value
         return result
     plan = json.loads(path.read_text(encoding='utf-8'), object_pairs_hook=unique)
+    return validate_plan(plan, path)
+
+
+def validate_plan(plan, path):
     require(isinstance(plan, dict), 'Plan debe ser un objeto')
     version = plan.get('schema_version')
-    require(type(version) is int and version in (1, 2), 'Versión no soportada')
+    require(type(version) is int and version in (1, 2, 3), 'Versión no soportada')
+    if version == 3:
+        from story_plan import validate_story
+        return validate_story(plan, path)
     fields = ['schema_version', 'source', 'project_prefix', 'timeline', 'segments', 'output_dir']
     keys(plan, fields + (['captions', 'style'] + (['audio'] if 'audio' in plan else []) if version == 2 else []))
     require(isinstance(plan['project_prefix'], str) and
@@ -173,25 +180,34 @@ def execute(plan, resolve, report, save, timeout):
     export_draft(project, pm, plan, report, save, timeout)
 
 
-def export_draft(project, pm, plan, report, save, timeout):
+def export_draft(project, pm, plan, report, save, timeout, wait=True):
     tl = plan['timeline']
     name = project.GetName()
     run_dir = Path(report['run_dir'])
     backup = run_dir / 'editable.drp'
     require(not backup.exists() and pm.ExportProject(name, str(backup), False), 'No se pudo exportar proyecto editable')
     require(backup.is_file() and backup.stat().st_size > 0, 'DRP ausente')
+    report['editable_project'] = str(backup)
     require('H264' in project.GetRenderCodecs('mp4').values(), 'H.264 no disponible')
     require(project.SetCurrentRenderFormatAndCodec('mp4', 'H264'), 'Formato no disponible')
     require(project.SetCurrentRenderMode(1), 'No se pudo elegir single clip')
-    require(project.SetRenderSettings({'SelectAllFrames': True, 'TargetDir': str(run_dir),
+    render_settings = {'SelectAllFrames': True, 'TargetDir': str(run_dir),
         'CustomName': 'draft', 'ExportVideo': True, 'ExportAudio': True,
         'FormatWidth': tl['width'], 'FormatHeight': tl['height'], 'FrameRate': tl['fps'],
-        'VideoQuality': 8000, 'AudioCodec': 'aac', 'AudioSampleRate': 48000}), 'Ajustes de render rechazados')
+        'VideoQuality': 8000, 'AudioCodec': 'aac', 'AudioSampleRate': 48000}
+    if 'color' in plan:
+        render_settings.update(ColorSpaceTag='Rec.709', GammaTag='Gamma 2.4')
+    require(project.SetRenderSettings(render_settings), 'Ajustes de render rechazados')
     job = project.AddRenderJob()
     require(bool(job), 'No se pudo crear trabajo de render')
     report.update(stage='render_queued', render_job=job)
     save()
+    require(pm.SaveProject(), 'No se pudo guardar trabajo antes de renderizar')
     require(project.StartRendering([job]), 'No se pudo iniciar render')
+    if not wait:
+        report['stage'] = 'render_started'
+        save()
+        return
     deadline = time.monotonic() + timeout
     while True:
         status = project.GetRenderJobStatus(job)
@@ -225,7 +241,8 @@ def main():
         if not args.execute:
             print(json.dumps({'status': 'valid', 'scope': 'estructura y archivos; metadatos y rangos se comprueban en Resolve antes de crear timeline'}, ensure_ascii=True))
             return 0
-        require('audio' not in plan, 'La ruta nativa con SFX queda bloqueada tras dos cierres Qt de Resolve; usar sound_edit y export_draft mediante MCP')
+        require(plan['schema_version'] != 3, 'Los planes multi-fuente se ejecutan por etapas mediante MCP')
+        require('audio' not in plan, 'La ruta nativa con SFX sigue bloqueada tras cierres Qt observados; usar sound_edit y export_draft mediante MCP')
         if not args.worker:
             diagnostic = diagnose(APP, 30)
             require(diagnostic['status'] == 'ok', 'Diagnóstico: ' + diagnostic['status'])

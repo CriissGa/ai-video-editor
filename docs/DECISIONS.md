@@ -75,3 +75,14 @@ Estado: dirección creativa solicitada; muestra verificada y pendiente de revisi
 Usar un preset nuevo más alegre/exagerado, con palabras importantes mayores, pop de entrada, borde más grueso y sonidos elegidos según cortes/remates. Conservar presets anteriores. Biblioteca `sonidos/` privada, con copias de trabajo y selección persistida en el plan, pista SFX independiente y ganancias/fundidos ajustables; no añadir sonidos con cadencia fija.
 
 Restricción verificada de implementación: tras dos cierres Qt al ejecutar el flujo nativo con audio, bloquear esa ruta de CLI y completar etapas mediante MCP. La recuperación/exportación por MCP está comprobada; la causa del fallo nativo sigue sin aislarse y no se declara resuelta.
+
+
+## D010 — Historia multi-fuente y base de color antes del look
+
+Estado: implementada para la versión completa solicitada; duración específica de esta pieza 2–2½ minutos.
+
+Plan v3 con identificadores de fuente, rangos y zoom inicial/final por segmento; validar antes de crear timeline y comprobar identidad real de cada clip. Mantener v1/v2. Zoom progresivo mediante keyframes, con acentos en un Transform separado. Montaje por lotes y exportación no bloqueante mediante MCP.
+
+Verificar el perfil real del archivo: ambas fuentes iPhone se identificaron HLG. Normalizar HLG→SDR/Rec.709 Gamma 2.4 antes del acabado creativo, conservando gestión de color editable y etiquetas correctas. La adaptación de luminancia de títulos es específica del perfil probado; no se aplica a cámara ni se promete igualdad entre pantallas HDR y reproductores SDR.
+
+El nuevo cierre AddTrack por MCP sustituye la idea de que bastaba cambiar protocolo: el adaptador no crea pistas en timelines cargadas. Reutilizar una vacía compatible y, si hace falta, preparar copias mono de SFX. La causa interna sigue abierta y la ejecución nativa con audio permanece bloqueada.

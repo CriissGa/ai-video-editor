@@ -18,7 +18,7 @@ def validate_audio(audio, plan_path, fps, duration):
         sound['source'] = str(path)
         try:
             with wave.open(str(path), 'rb') as source:
-                require(source.getnchannels() == 2 and source.getsampwidth() == 2 and source.getframerate() == 48000, 'Sonidos deben ser PCM16 estéreo/48 kHz')
+                require(source.getnchannels() in (1, 2) and source.getsampwidth() == 2 and source.getframerate() == 48000, 'Sonidos deben ser PCM16 mono/estéreo a 48 kHz')
                 source_duration = source.getnframes() / source.getframerate()
         except (wave.Error, EOFError) as exc:
             raise ValueError('WAV inválido') from exc
@@ -46,9 +46,18 @@ def import_sounds(pool, audio, fps):
     return imported
 
 
+def choose_sfx_track(timeline, imported):
+    channels = {int(clip.GetClipProperty('Audio Ch')) for clip in imported.values()}
+    require(len(channels) == 1 and channels in ({1},{2}), 'Preparar todos los sonidos mono o estéreo con el mismo número de canales')
+    subtype = 'mono' if channels == {1} else 'stereo'
+    available = [index for index in range(2, timeline.GetTrackCount('audio')+1)
+                 if not timeline.GetItemListInTrack('audio',index) and timeline.GetTrackSubType('audio',index).lower() == subtype]
+    require(bool(available), 'Falta pista SFX vacía compatible; prepararla antes del montaje. No usar AddTrack sobre Fusion cargado')
+    return available[0]
+
+
 def apply_audio(project, timeline, audio, imported, fps):
-    require(timeline.AddTrack('audio', 'stereo'), 'No se pudo crear pista SFX')
-    track = timeline.GetTrackCount('audio')
+    track = choose_sfx_track(timeline, imported)
     require(timeline.SetTrackName('audio', track, 'AI Editor - SFX'), 'No se pudo nombrar pista SFX')
     for item in timeline.GetItemListInTrack('audio', 1):
         require(item.SetProperties({'AudioVolume': audio['dialogue_gain_db']}), 'Ganancia de voz rechazada')

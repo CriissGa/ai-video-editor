@@ -4,7 +4,7 @@ Automatización local para producir Shorts, Reels y TikToks con DaVinci Resolve 
 
 ## Estado
 
-Primer flujo de edición implementado y verificado con DaVinci Resolve Studio 21.1.2.10: plan JSON validado, importación, cortes, transcripción cacheada, subtítulos Fusion editables, texto grande con borde/sombra, zooms animados, temblores y borrador MP4.
+Historia completa de dos fuentes implementada y verificada en DaVinci Resolve Studio 21.1.2.10: plan JSON v3, transcripción cacheada, subtítulos editables, zooms progresivos con keyframes, acentos/SFX y conversión HLG→SDR. La muestra actual dura 2:02; mezcla y look se afinan mediante revisión humana.
 
 Repositorio privado: [CriissGa/ai-video-editor](https://github.com/CriissGa/ai-video-editor).
 
@@ -52,3 +52,6 @@ Consulta [subtítulos, plan v2 y preset de estilo](docs/CAPTIONS_WORKFLOW.md). L
 
 
 Para preparar la biblioteca de sonidos local y usar el preset con palabras importantes más grandes, consulta [palabras de foco, sonidos y límites de ejecución](docs/SOUND_WORKFLOW.md). El montaje de SFX se opera mediante MCP: la CLI valida esos planes, pero bloquea su ejecución nativa tras dos cierres observados de Resolve.
+
+
+El flujo ya produjo una historia de dos fuentes de 2:02, con zoom progresivo mediante keyframes, SFX y conversión HLG→SDR editable. Consulta [plan v3, color y recuperación sin crear pistas](docs/FULL_STORY_WORKFLOW.md). La configuración de color se valida con metadatos reales; el acabado creativo y la mezcla se ajustan al revisar el video completo.
