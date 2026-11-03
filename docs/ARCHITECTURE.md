@@ -40,7 +40,7 @@ El flujo debe permitir repetir una exportación sin volver a pedir decisiones al
 
 Herramientas implementadas: `scripts/diagnose_resolve.py` verifica conectividad de lectura mediante ResolvePython y subproceso con tiempo límite. `scripts/edit_video.py` valida el plan local, reutiliza el diagnóstico y ejecuta importación, montaje, comprobaciones y render con código local, sin IA por operación. El mismo módulo contiene el adaptador mínimo de Resolve para evitar capas prematuras.
 
-Contrato v1 y resultados en `EDIT_WORKFLOW.md`: una fuente vertical con audio, FPS enteros iguales, rangos [entrada, salida) redondeados half-up a frames. El plan reside en `plans/`; medios y resultados privados en rutas locales excluidas de Git. Cada ejecución conserva plan resuelto, informe de etapas, copia DRP y MP4 en una carpeta exclusiva. Se comprueban fuente y rangos antes de crear timeline, y clips de video/audio antes de renderizar. No hay reanudación automática ni caché implementadas todavía; repetir crea otra ejecución aislada.
+Contrato v1 y resultados en `EDIT_WORKFLOW.md`: una fuente vertical con audio, FPS enteros iguales, rangos [entrada, salida) redondeados half-up a frames. El plan reside en `plans/`; medios y resultados privados en rutas locales excluidas de Git. Cada ejecución conserva plan resuelto, informe de etapas, copia DRP y MP4 en una carpeta exclusiva. Se comprueban fuente y rangos antes de crear timeline, y clips de video/audio antes de renderizar. No hay reanudación automática del montaje; repetir crea otra ejecución aislada. La caché de transcripción sí está implementada por contenido y configuración.
 
 ## Primer alcance propuesto
 
@@ -56,10 +56,17 @@ Un archivo hablado, un segmento indicado por tiempos, timeline vertical de 1080 
 
 ## Verificación pendiente
 
-Versión y acceso de scripting confirmados con Studio 21.1.2.10 (ver `RESOLVE_DIAGNOSTIC.md`). Importación, montaje por rangos, timeline editable, DRP y render MP4 verificados en Studio 21.1.2.10 con dos cortes y 300 frames. Pendiente: revisión perceptual de color/mezcla, subtítulos y efectos. Después probar tres videos representativos y medir correcciones manuales, tiempo de proceso y consumo de IA.
+Versión y acceso de scripting confirmados con Studio 21.1.2.10 (ver `RESOLVE_DIAGNOSTIC.md`). Importación, montaje por rangos, timeline editable, DRP y render MP4 verificados en Studio 21.1.2.10 con dos cortes y 300 frames. Subtítulos Text+ editables y zooms verificados en una muestra editorial de 695 frames. Pendiente: revisión perceptual de color/mezcla, calibración editorial y efectos adicionales. Después probar tres videos representativos y medir correcciones manuales, tiempo de proceso y consumo de IA.
 
 ## Dirección creativa y eventos de edición
 
 Entrada confirmada: videos verticales con cámara estática y el usuario a cámara. Montaje cómico rápido inspirado en recursos de Rubius y HolaSoyGerman, con identidad propia moderna. Recursos: subtítulos con color selectivo, frases destacadas, zooms, temblores, blur, transiciones y efectos sonoros.
 
 El plan deberá describir eventos con tiempo, duración, intensidad y referencias a presets y sonidos reutilizables. Validar cada recurso en Resolve. Preservar rostro, legibilidad, voz y pausas cómicas. Evaluar seguimiento facial según el movimiento real: cámara estática no significa rostro inmóvil.
+
+
+## Transcripción y estilo implementados
+
+`scripts/transcribe_video.py` genera transcripción nativa de Resolve y caché SHA-256 con versión/configuración en `transcripts/`. Normaliza palabras a frames de fuente. `scripts/prepare_captions.py` valida la identidad del contenido y proyecta las palabras al montaje seleccionado por el agente, generando un plan v2 privado. No selecciona fragmentos automáticamente.
+
+`scripts/caption_style.py` valida subtítulos en tiempo de timeline y aplica el preset Text+ con énfasis por frase y Transform para zooms; exporta SRT y fotogramas. `edit_video.py` mantiene compatibilidad v1 y añade la etapa de estilo antes de guardar DRP y renderizar v2. Contratos y evidencia en `CAPTIONS_WORKFLOW.md`. Los nodos siguen editables al reimportar DRP. No existe pista nativa de subtítulos ni animación palabra por palabra todavía.

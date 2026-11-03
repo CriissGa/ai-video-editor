@@ -48,6 +48,16 @@ class EditTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             self.load(plan)
 
+    def test_v2_schema_and_zoom(self):
+        plan = copy.deepcopy(self.plan)
+        plan.update(schema_version=2, style={'preset': 'bold-yellow-v1'}, captions=[
+            {'in_seconds': 0, 'out_seconds': 1, 'text': 'TEST', 'emphasis': False}])
+        plan['segments'][0]['zoom'] = 1.1
+        self.assertEqual(self.load(plan)['schema_version'], 2)
+        plan['segments'][0]['zoom'] = 1.5
+        with self.assertRaises(ValueError):
+            self.load(plan)
+
     def test_source_restrictions(self):
         for changes in [{'FPS': 25}, {'Resolution': '1920x1080'}, {'Audio Ch': '0'}, {'Frames': '40'}]:
             with self.subTest(changes=changes), self.assertRaises(ValueError):

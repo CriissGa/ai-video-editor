@@ -40,8 +40,11 @@ def load_plan(path):
             result[key] = value
         return result
     plan = json.loads(path.read_text(encoding='utf-8'), object_pairs_hook=unique)
-    keys(plan, ['schema_version', 'source', 'project_prefix', 'timeline', 'segments', 'output_dir'])
-    require(type(plan['schema_version']) is int and plan['schema_version'] == 1, 'Versión no soportada')
+    require(isinstance(plan, dict), 'Plan debe ser un objeto')
+    version = plan.get('schema_version')
+    require(type(version) is int and version in (1, 2), 'Versión no soportada')
+    fields = ['schema_version', 'source', 'project_prefix', 'timeline', 'segments', 'output_dir']
+    keys(plan, fields + (['captions', 'style'] if version == 2 else []))
     require(isinstance(plan['project_prefix'], str) and
             re.fullmatch(r'AIEditor_Test_[A-Za-z0-9_-]{1,50}', plan['project_prefix']), 'Prefijo de proyecto de prueba inválido')
     for key in ('source', 'output_dir'):
@@ -62,9 +65,14 @@ def load_plan(path):
     require(number(tl['fps']) and tl['fps'] in (24, 25, 30, 50, 60), 'FPS no soportado; usar FPS entero')
     require(isinstance(plan['segments'], list) and 0 < len(plan['segments']) <= 100, 'Se requieren 1–100 segmentos')
     for segment in plan['segments']:
-        keys(segment, ['in_seconds', 'out_seconds'])
+        keys(segment, ['in_seconds', 'out_seconds'] + (['zoom'] if version == 2 else []))
+        if version == 2:
+            require(number(segment['zoom']) and 1 <= segment['zoom'] <= 1.2, 'Zoom fuera de 1–1.2')
         start, end = segment['in_seconds'], segment['out_seconds']
         require(number(start) and number(end) and 0 <= start < end, 'Rango temporal inválido')
+    if version == 2:
+        from caption_style import validate_style
+        validate_style(plan)
     return plan
 
 
@@ -136,6 +144,14 @@ def execute(plan, resolve, report, save, timeout):
         require(float(settings[key]) == value, 'Ajuste de timeline incorrecto: ' + key)
     require(pm.SaveProject(), 'No se pudo guardar proyecto')
     report.update(stage='timeline_verified', timeline=tl['name'])
+    if plan['schema_version'] == 2:
+        from caption_style import apply_style, write_srt
+        require(resolve.OpenPage('edit'), 'No se pudo abrir Edit para Fusion')
+        report['style'] = apply_style(timeline, plan, Path(report['run_dir']))
+        verify_timeline(timeline, ranges)
+        write_srt(plan['captions'], tl['fps'], Path(report['run_dir']) / 'captions.srt')
+        report['stage'] = 'style_verified'
+        require(pm.SaveProject(), 'No se pudo guardar estilo')
     save()
     run_dir = Path(report['run_dir'])
     backup = run_dir / 'editable.drp'

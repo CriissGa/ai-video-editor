@@ -54,4 +54,4 @@ El render espera localmente hasta completar o agotar `--render-timeout`. El esta
 
 ## Límites
 
-Sin subtítulos, efectos, selección automática ni tratamiento de color específico en este hito. La fuente identifica HLG; revisar apariencia y mezcla al calibrar el estilo. El montaje queda abierto en Resolve para revisión humana. Los errores conservan los proyectos y artefactos de prueba para diagnóstico, sin limpiarlos automáticamente. No se prometen reanudación, caché por contenido o portabilidad a otras versiones hasta verificarlas.
+El plan v1 conserva el montaje básico. El plan v2 añade subtítulos Fusion y zooms: ver `CAPTIONS_WORKFLOW.md`. No hay selección automática ni tratamiento de color específico. La fuente identifica HLG; revisar apariencia y mezcla al calibrar el estilo. El montaje queda abierto en Resolve para revisión humana. Los errores conservan los proyectos y artefactos de prueba para diagnóstico, sin limpiarlos automáticamente. No se prometen reanudación, caché por contenido o portabilidad a otras versiones hasta verificarlas.

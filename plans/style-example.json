@@ -1,0 +1,16 @@
+{
+  "schema_version": 2,
+  "source": "../prueba.MOV",
+  "project_prefix": "AIEditor_Test_StyleExample",
+  "timeline": {"name": "Style example", "width": 1080, "height": 1920, "fps": 30},
+  "segments": [
+    {"in_seconds": 0, "out_seconds": 2, "zoom": 1.0},
+    {"in_seconds": 10, "out_seconds": 12, "zoom": 1.08}
+  ],
+  "output_dir": "../outputs/style-example",
+  "style": {"preset": "bold-yellow-v1"},
+  "captions": [
+    {"in_seconds": 0, "out_seconds": 1.8, "text": "EXAMPLE CAPTION", "emphasis": false},
+    {"in_seconds": 2, "out_seconds": 3.8, "text": "HIGHLIGHT", "emphasis": true}
+  ]
+}

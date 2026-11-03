@@ -48,3 +48,12 @@ Estado: implementado y verificado para el primer flujo solicitado.
 Una fuente vertical con audio, tiempos en segundos relativos al inicio, intervalos [entrada, salida), redondeo half-up a frames y FPS enteros iguales entre fuente y timeline. Montaje secuencial en el orden del plan; sin conversión de FPS en esta versión. Contrato completo en `EDIT_WORKFLOW.md`.
 
 Cada ejecución crea un proyecto `AIEditor_Test_…` y salida exclusiva; conserva plan, informe, DRP y MP4. Repetir crea otra ejecución, no reanuda ni sobrescribe. Esta primera implementación registra etapas para diagnóstico; la reanudación automática sigue pendiente. Sin subtítulos o efectos en este hito.
+
+
+## D007 — Primera implementación de subtítulos y caché
+
+Estado: implementada y verificada en la continuación autorizada por el usuario; preset propuesto para revisión.
+
+Usar transcripción nativa local de Resolve con caché por hash del archivo, versión e idioma/configuración. Persistir texto y planes con palabras del usuario solo en carpetas privadas excluidas de Git. Mantener el idioma original en la primera muestra.
+
+Plan v2 compatible con el ejecutor v1: zoom por segmento, preset nombrado y subtítulos con tiempos relativos a la timeline. Implementar los subtítulos como Text+ editables dentro de Fusion, con SRT adicional sin formato. No son una pista nativa de subtítulos. Texto blanco, énfasis amarillo por frase y contorno negro son una propuesta de estilo ajustable; el usuario aún no ha aprobado esta muestra.
