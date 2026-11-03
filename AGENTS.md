@@ -65,3 +65,6 @@ Dirección adicional confirmada: edición más alegre y exagerada, palabras impo
 
 
 Para la historia actual, el usuario pidió unos 2–2½ minutos; no es una duración fija para todos los videos. Preferencias de estilo: zooms progresivos con keyframes además de acentos rápidos, y SFX más audibles. Videos iPhone de ambas partes verificados como Rec.2100 HLG: normalizar técnicamente a SDR/Rec.709 antes de afinar el look creativo. El MCP también sufrió un cierre en AddTrack tras Fusion; ya no crear pistas en timelines cargadas. Reutilizar una pista vacía compatible (SFX mono cuando sea necesario) y verificar que no cambió el número de pistas. No declarar resuelta la causa del crash por cambiar de protocolo.
+
+
+Preferencia actual: trabajar en un solo proyecto/timeline (`AI Editor - Prueba 1`), revisar directamente en Resolve sin renderizar cada cambio y mantener todo editable. Zooms progresivos suaves desde encuadre completo hacia la cara; no perder encuadre. Variar animaciones de texto. El usuario quiere subtítulos como elementos accesibles de timeline; Fusion por clip es la implementación actual, no dar por satisfecha una pista independiente. Limpieza de proyectos de prueba propios autorizada, con respaldo DRP previo.

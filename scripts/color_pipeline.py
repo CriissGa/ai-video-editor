@@ -10,19 +10,36 @@ SETTINGS = {'colorScienceMode':'davinciYRGBColorManagedv2', 'isAutoColorManage':
             'outputDRT':'DaVinci', 'inputDRT':'None', 'graphicsWhiteLevel':'100', 'colorSpaceOutputToneLuminanceMax':'100'}
 
 
+SOFT_PRESET = 'iphone-hlg-sdr-soft-v2'
+SOFT_SETTINGS = dict(SETTINGS, colorSpaceTimeline='Rec.709 Gamma 2.4',
+                     timelineWorkingLuminanceMode='SDR 100', timelineWorkingLuminance='100',
+                     inputDRT='DaVinci', outputDRT='None', colorSpaceOutputToneMapping='None')
+PROFILES = {PRESET: SETTINGS, SOFT_PRESET: SOFT_SETTINGS}
+CAMERA_SOFT = {'Saturation1':0.90,'MasterRGBContrast':1.01,'MasterRGBGain':0.98,'MasterRGBGamma':0.995}
+
+
+def graphics_scale_for(color):
+    return 1.0 if color.get('preset') == SOFT_PRESET else GRAPHICS_SCALE
+
+
+def camera_adjustments(color):
+    return CAMERA_SOFT.copy() if color.get('preset') == SOFT_PRESET else {}
+
+
 def validate_color(color):
     keys(color, ['preset'])
-    require(color['preset'] == PRESET, 'Preset de color desconocido')
+    require(color['preset'] in PROFILES, 'Preset de color desconocido')
 
 
 def apply_color_settings(project, color):
     validate_color(color)
-    for key, value in SETTINGS.items():
+    settings = PROFILES[color['preset']]
+    for key, value in settings.items():
         require(project.SetSettings({key:value}), 'Ajuste de color rechazado: ' + key)
     actual = project.GetSettings()
-    for key, value in SETTINGS.items():
+    for key, value in settings.items():
         require(str(actual[key]) == value, 'Ajuste de color no conservado: ' + key)
-    return {'preset':PRESET, 'settings':{key:actual[key] for key in SETTINGS}}
+    return {'preset':color['preset'], 'settings':{key:actual[key] for key in settings}}
 
 
 def verify_hlg_sources(media):
@@ -38,6 +55,7 @@ def verify_hlg_sources(media):
 def apply_graphics_luminance(timeline, plan):
     """Mantener legible la paleta Text+ bajo el perfil RCM; no modificar MediaIn."""
     from caption_style import caption_intersections
+    scale = graphics_scale_for(plan.get('color',{'preset':PRESET}))
     offset = 0
     count = 0
     for item in timeline.GetItemListInTrack('video',1):
@@ -47,11 +65,11 @@ def apply_graphics_luminance(timeline, plan):
         require(len(texts)==len(captions), 'Textos y plan no coinciden')
         for text,(caption,_,_) in zip(texts,captions):
             require(text.GetInput('StyledText')==caption['text'], 'Texto distinto al plan')
-            values = {'Red1':GRAPHICS_SCALE, 'Green1':GRAPHICS_SCALE*(0.85 if caption['emphasis'] else 1),
-                      'Blue1':GRAPHICS_SCALE*(0.12 if caption['emphasis'] else 1)}
+            values = {'Red1':scale, 'Green1':scale*(0.85 if caption['emphasis'] else 1),
+                      'Blue1':scale*(0.12 if caption['emphasis'] else 1)}
             for key,value in values.items():
                 text.SetInput(key,value)
                 require(abs(text.GetInput(key)-value)<0.00001, 'Luminancia gráfica no aplicada')
             count += 1
         offset += int(item.GetDuration())
-    return {'text_nodes':count,'graphics_scale':GRAPHICS_SCALE}
+    return {'text_nodes':count,'graphics_scale':scale}

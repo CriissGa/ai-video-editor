@@ -87,3 +87,9 @@ La integración nativa con SFX produjo dos fallos Qt de Resolve y quedó bloquea
 `story_plan.py` añade validación v3 por fuentes identificadas y montaje/verificación de identidad, tiempos y parámetros. Reutiliza validadores v2, `source_ranges` y comprobaciones del ejecutor. `caption_style.apply_style` trabaja por rangos de clips para guardar lotes y añade zoom progresivo con keyframes reales; los acentos quedan en un Transform separado. `color_pipeline.py` configura/verifica el perfil HLG→SDR y adapta solo la luminancia de los gráficos Text+ bajo esa configuración.
 
 La exportación puede iniciar de forma no bloqueante, persistiendo el ID antes de consultar su terminación. Validación CLI sigue disponible; v3 y audio se operan por etapas MCP. Después de otro cierre de AddTrack incluso por MCP, `sound_edit` deja de crear pistas y exige una vacía compatible; `prepare_sounds --channels 1` permite usar pistas mono existentes. La alternativa se verificó en la pieza completa, sin considerar resuelta la causa interna de Qt. Contratos y evidencia en `FULL_STORY_WORKFLOW.md`.
+
+
+La revisión corta incorpora `caption_animation.py` para tamaño adaptativo y entradas cinéticas, eventos `whip` con pan/blur y perfil SDR suave separado. El audio mono se observó silencioso al exportar aislado: las comprobaciones de clips/ganancias no garantizan ruteo al bus. Ese límite está abierto y debe comprobarse por archivo exportado.
+
+
+`revise_workspace.py` modifica las composiciones existentes de una sola timeline propia, sin crear proyectos/pistas ni renderizar: zoom de dos keyframes con pivote facial manual, anulación de desplazamientos de acento y variantes de entrada Text+. La revisión usa parámetros persistidos privadamente en `outputs/workspace/revision-plan.json`; no incorpora seguimiento facial. Respaldos DRP y manifiesto de limpieza son artefactos locales privados.

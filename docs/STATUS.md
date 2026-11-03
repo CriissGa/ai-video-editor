@@ -1,5 +1,26 @@
 # Estado del proyecto
 
+## Continuidad actual — proyecto único (2026-11-03)
+
+El usuario aprobó la dirección visual y pidió zoom continuo hacia su rostro, un solo proyecto/timeline y revisión directa sin render habitual. Proyecto activo `AI Editor - Prueba 1`, timeline `Prueba 1 - Edicion principal`, misma muestra de 23.167 s/15 clips. Zoom con dos keyframes lineales 1.0→1.10 por clip, pivote facial aproximado (0.43,0.60), centro neutro y verificación inicial/intermedia/final. No es seguimiento facial automático ni se verificó cada frame. Se desactivaron acentos de desplazamiento brusco; se mantienen barridos blur existentes. Tres entradas distintas para 57 nodos Text+. Texto sigue dentro de Fusion de cada clip, **no en bloques independientes en una pista de texto**; esa petición de comodidad sigue pendiente. Voz y ocho SFX permanecen como clips de audio; salida mono silenciosa sigue sin resolver.
+
+No se creó proyecto, timeline, pista ni render adicional. Respaldo antes/después y plan/informe privados en `outputs/workspace/`. Se exportaron y comprobaron archivos DRP no vacíos de 23 proyectos `AIEditor_Test_*` antes de eliminarlos de la biblioteca, según autorización del usuario; manifiesto y copias en `outputs/project-archive/`. Se conservó `New Project 1`, ajeno a estas pruebas. Sin cierres esta sesión. Treinta pruebas de regresión aprobadas y zoom verificado por API; revisar encuadre reproduciendo en Resolve.
+
+**Próximo paso:** revisar esta única timeline con el usuario; resolver salida SFX y separar títulos en una pista editable cuando haya una vía segura sin AddTrack sobre Fusion cargado. La revisión anterior y sus renders quedan como historial.
+
+## Revisión actual — solo prueba.MOV (2026-11-03)
+
+El usuario rechazó el color fuerte y el movimiento insuficiente de la pieza larga, pidió una muestra corta solo con la primera fuente, transiciones/más movimiento y subtítulos cinéticos. Indicó que queda muy poco presupuesto de tokens.
+
+- Muestra visual exportada: `outputs/kinetic/20261103_022232_cd012c4d/draft.mp4`, 23.167 s, 15 planos, 56 entradas de subtítulos (57 nodos por cruce de corte), 12 eventos (seis acentos de zoom, dos temblores, cuatro barridos con blur).
+- Preset `kinetic-punch-v4`: grupos más cortos, pop/desplazamiento de entrada en todos los textos, ajuste de palabras largas para evitar recortes. Perfil `iphone-hlg-sdr-soft-v2`: timeline SDR y reducción moderada de saturación en cámara, sin cambiar el texto blanco/amarillo. Fotogramas revisados.
+- Proyecto `AIEditor_Test_Kinetic_20261103_022232_cd012c4d`, timeline `Prueba 1 - kinetic style test`. No se trabajó con parte 2 ni se volvió a transcribir. Sin cierres durante esta revisión; no se llamó AddTrack.
+- **Audio pendiente, no declarar resuelto:** auditoría del proyecto estéreo anterior confirmó SFX exportados a -20.31 dBFS. La nueva pista mono A2 contiene ocho clips a -6 dB, pero su exportación aislada resultó silencio (-200 dBFS). No basta subir ganancias; falta resolver salida/ruteo y comprobar la mezcla final. La muestra entregada debe considerarse visual, con voz habilitada, no mezcla sonora aprobada.
+- Tras render, SetTrackEnable desde Deliver no restablecía la voz; abrir Edit y habilitar A1 sí funcionó y se comprobó antes de exportar el borrador. Hubo un AppendToTimeline con retorno nulo antes de guardar/cerrar/reabrir el proyecto; después se montaron los clips en A2 sin crear pistas.
+- Exportación Complete y copia DRP guardada en la misma carpeta; el informe registra expresamente la limitación sonora.
+
+**Próximo paso concreto:** comprobar ruteo Fairlight/bus o preparar una mezcla alternativa comprobable; no volver a tocar AddTrack ni prometer SFX audibles antes de medir una exportación aislada y escucharla. Revisar primero esta muestra visual con el usuario. Los hitos de abajo son históricos y no sustituyen estas limitaciones actuales.
+
 ## Situación actual
 
 Primer flujo completo implementado y verificado el 2026-11-03 (America/Phoenix), con DaVinci Resolve Studio 21.1.2.10. Herramientas locales Python sin dependencias externas: diagnóstico y ejecutor de planes JSON. Repositorio privado: https://github.com/CriissGa/ai-video-editor.

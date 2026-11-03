@@ -86,3 +86,13 @@ Plan v3 con identificadores de fuente, rangos y zoom inicial/final por segmento;
 Verificar el perfil real del archivo: ambas fuentes iPhone se identificaron HLG. Normalizar HLG→SDR/Rec.709 Gamma 2.4 antes del acabado creativo, conservando gestión de color editable y etiquetas correctas. La adaptación de luminancia de títulos es específica del perfil probado; no se aplica a cámara ni se promete igualdad entre pantallas HDR y reproductores SDR.
 
 El nuevo cierre AddTrack por MCP sustituye la idea de que bastaba cambiar protocolo: el adaptador no crea pistas en timelines cargadas. Reutilizar una vacía compatible y, si hace falta, preparar copias mono de SFX. La causa interna sigue abierta y la ejecución nativa con audio permanece bloqueada.
+
+
+## D011 — Calibración corta y validación sonora real
+
+El usuario pide trabajar solo con `prueba.MOV` para ahorrar tokens, color más suave y edición mucho más dinámica. Conservar presets anteriores y probar variantes cortas antes de volver a una pieza larga. No prometer ausencia de aburrimiento o paridad estilística solo por contar efectos. La presencia de SFX en timeline no prueba que sean audibles: verificar un stem exportado; el mono resultó silencioso y queda pendiente de ruteo.
+
+
+## D012 — Un proyecto de trabajo y revisión sin render
+
+Preferencia explícita del usuario: continuar en un solo proyecto con una timeline, audio visible/editable y zoom continuo conservador hacia la cara. No generar otro proyecto o render en cada iteración. Conservar copias DRP antes de limpiar proyectos de prueba propios. Variar entradas de texto. Los títulos Fusion actuales no equivalen a bloques independientes en pista; queda pendiente esa mejora. No añadir pistas en la timeline Fusion cargada.

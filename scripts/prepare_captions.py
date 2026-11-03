@@ -13,7 +13,7 @@ from caption_style import PRESET, PRESETS
 
 
 def generate_captions(plan, transcript, preset=PRESET):
-    width = min(22, PRESETS[preset]['line_width'])
+    width = PRESETS[preset].get('wrap_width',min(22,PRESETS[preset]['line_width']))
     focus = PRESETS[preset].get('focus_words', [])
     fps = plan['timeline']['fps']
     require(transcript['fps'] == fps, 'FPS de transcripción distinto')
@@ -34,7 +34,7 @@ def generate_captions(plan, transcript, preset=PRESET):
                 continue
             text = ' '.join(w['text'] for w in group + [word]).upper()
             lines = textwrap.wrap(text, width=width, break_long_words=False, break_on_hyphens=False)
-            if group and (len(group) >= 4 or len(lines) > 2 or len(text) > 42 or
+            if group and (len(group) >= PRESETS[preset].get('max_words',4) or len(lines) > 2 or len(text) > 42 or
                           word['start_frame'] - group[-1]['end_frame'] > fps * 0.5):
                 groups.append(group)
                 group = []

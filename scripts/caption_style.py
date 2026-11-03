@@ -5,7 +5,10 @@ PRESET = 'bold-yellow-v1'
 PRESETS = {PRESET: {'size': 0.075, 'outline': 0.035, 'shadow': False, 'line_width': 24},
            'bold-yellow-v2': {'size': 0.10, 'outline': 0.05, 'shadow': True, 'line_width': 18},
            'bold-party-v3': {'size': 0.105, 'emphasis_size': 0.14, 'outline': 0.075, 'shadow': True, 'line_width': 16,
-                             'focus_words': ['PROFESSIONAL', 'PROFESIONAL', 'MYSELF', 'SOLO', 'BEST', 'MEJOR', 'CLASS', 'CLASE', 'HAIR', 'PELO']}}
+                             'focus_words': ['PROFESSIONAL', 'PROFESIONAL', 'MYSELF', 'SOLO', 'BEST', 'MEJOR', 'CLASS', 'CLASE', 'HAIR', 'PELO']},
+           'kinetic-punch-v4': {'size':0.112,'emphasis_size':0.145,'outline':0.08,'shadow':True,
+                                'line_width':16,'wrap_width':12,'max_words':2,'kinetic':True,
+                                'focus_words':['PROFESSIONAL','PROFESIONAL','MYSELF','SOLO','BEST','MEJOR','CLASS','CLASE','HAIR','PELO']}}
 
 
 def validate_style(plan):
@@ -47,8 +50,8 @@ def apply_style(timeline, plan, run_dir, start_index=0, end_index=None):
     preset = PRESETS[plan['style']['preset']]
     graphics_scale = 1.0
     if 'color' in plan:
-        from color_pipeline import GRAPHICS_SCALE
-        graphics_scale = GRAPHICS_SCALE
+        from color_pipeline import graphics_scale_for
+        graphics_scale = graphics_scale_for(plan['color'])
     events = plan['style'].get('events', [])
     effect_checks = []
     progressive_checks = []
@@ -74,7 +77,18 @@ def apply_style(timeline, plan, run_dir, start_index=0, end_index=None):
         duration = int(item.GetDuration())
         transform = comp.AddTool('Transform')
         transform.SetAttrs({'TOOLS_Name': 'AIEditor_Zoom'})
-        require(transform.ConnectInput('Input', media_in), 'No se pudo conectar zoom')
+        camera = media_in
+        if 'color' in plan:
+            from color_pipeline import camera_adjustments
+            adjustments = camera_adjustments(plan['color'])
+            if adjustments:
+                camera = comp.AddTool('ColorCorrector')
+                camera.SetAttrs({'TOOLS_Name':'AIEditor_CameraColor'})
+                require(camera.ConnectInput('Input',media_in), 'No se pudo conectar color suave')
+                for key,value in adjustments.items():
+                    camera.SetInput(key,value)
+                    require(abs(camera.GetInput(key)-value)<0.00001,'Ajuste de cámara no aplicado')
+        require(transform.ConnectInput('Input', camera), 'No se pudo conectar zoom')
         transform.SetInput('Size', segment['zoom'])
         require(abs(transform.GetInput('Size') - segment['zoom']) < 0.0001, 'Zoom no aplicado')
         moving = 'zoom_end' in segment and segment['zoom_end'] != segment['zoom']
@@ -96,13 +110,23 @@ def apply_style(timeline, plan, run_dir, start_index=0, end_index=None):
             checked = apply_effects(accent, events, fps, offset, duration, local_start, 1.0 if moving else segment['zoom'])
             effect_checks.append({'segment': index + 1, 'samples': checked})
         background = accent if events else transform
+        from edit_effects import whip_blur_expression
+        blur_expression = whip_blur_expression(events,fps,offset,duration,local_start)
+        if blur_expression != '0':
+            blur = comp.AddTool('Blur')
+            blur.SetAttrs({'TOOLS_Name':'AIEditor_WhipBlur'})
+            require(blur.ConnectInput('Input',background), 'No se pudo conectar barrido')
+            blur.SetInput('YBlurSize',0)
+            blur.XBlurSize.SetExpression(blur_expression)
+            background = blur
         captions = caption_intersections(plan['captions'], fps, offset, duration)
         for caption, start, end in captions:
             count += 1
             created += 1
             text = comp.AddTool('TextPlus')
             text.SetAttrs({'TOOLS_Name': 'Caption_%03d' % count})
-            text_size = preset.get('emphasis_size', preset['size']) if caption['emphasis'] else preset['size']
+            from caption_animation import fitted_size
+            text_size = fitted_size(caption['text'],preset,caption['emphasis'])
             for key, value in {'StyledText': caption['text'], 'Font': 'Arial', 'Style': 'Bold',
                 'Size': text_size, 'Center': {1: 0.5, 2: 0.25}, 'Red1': graphics_scale,
                 'Green1': graphics_scale*(0.85 if caption['emphasis'] else 1.0),
@@ -126,7 +150,13 @@ def apply_style(timeline, plan, run_dir, start_index=0, end_index=None):
             merge.Blend.SetExpression('iif(time >= %d and time < %d, 1, 0)' % (begin, finish))
             require(merge.GetInput('Blend', begin) == 1 and merge.GetInput('Blend', finish) == 0,
                     'Temporización de subtítulo incorrecta')
-            if 'emphasis_size' in preset and caption['emphasis']:
+            if preset.get('kinetic'):
+                from caption_animation import kinetic_expressions
+                size_expression,center_expression = kinetic_expressions(begin,finish,text_size)
+                text.Size.SetExpression(size_expression)
+                text.Center.SetExpression(center_expression)
+                require(text.GetInput('Size',begin+3)>text_size,'Pop cinético no aplicado')
+            elif 'emphasis_size' in preset and caption['emphasis']:
                 text.Size.SetExpression('%.8f*(1+iif(time >= %d and time < %d, 0.12*sin((time-%d)/6*3.14159265), 0))' % (text_size, begin, begin+6, begin))
                 require(text.GetInput('Size', begin+3) > text_size, 'Pop de palabra no aplicado')
             background = merge
