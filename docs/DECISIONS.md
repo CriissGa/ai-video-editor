@@ -57,3 +57,12 @@ Estado: implementada y verificada en la continuación autorizada por el usuario;
 Usar transcripción nativa local de Resolve con caché por hash del archivo, versión e idioma/configuración. Persistir texto y planes con palabras del usuario solo en carpetas privadas excluidas de Git. Mantener el idioma original en la primera muestra.
 
 Plan v2 compatible con el ejecutor v1: zoom por segmento, preset nombrado y subtítulos con tiempos relativos a la timeline. Implementar los subtítulos como Text+ editables dentro de Fusion, con SRT adicional sin formato. No son una pista nativa de subtítulos. Texto blanco, énfasis amarillo por frase y contorno negro son una propuesta de estilo ajustable; el usuario aún no ha aprobado esta muestra.
+
+
+## D008 — Voz bilingüe y revisión visual
+
+Estado: preferencia creativa confirmada por el usuario (2026-11-03); nueva muestra pendiente de revisión.
+
+Preservar el español/inglés mezclado, el acento y equivocaciones al hablar como recursos de humor. Corregir errores de transcripción solo al contrastarlos con el audio, sin normalizar automáticamente la gramática ni traducir. La transcripción automática por idioma dominante no se considera resuelta para todos los pasajes mixtos.
+
+Aumentar subtítulos, mantener borde negro y añadir sombra suave. Usar zooms animados y temblores breves según remates, sin cadencia fija. Preset `bold-yellow-v2` separado del anterior para conservar reproducibilidad: tamaño 0.10, contorno 0.05, sombra negra semitransparente. Eventos explícitos en tiempo de timeline, implementados sobre el video antes de los textos para mantener legibilidad.

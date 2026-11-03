@@ -53,3 +53,29 @@ Transcripción persistida: 218 palabras. Caché reutilizada sin nuevo análisis.
 Proyecto final `AIEditor_Test_Editorial_20261103_003001_f7d8b7fa`, dejado abierto. Carpeta privada `outputs/editorial/20261103_003001_f7d8b7fa/`. DRP importado con otro nombre de prueba: cuatro clips online, cuatro composiciones, 26 nodos Text+ y 695 frames conservados. Se revisaron fotogramas del montaje y del MP4: legibilidad, contorno y ubicación debajo del rostro en las muestras inspeccionadas. Esto no sustituye revisar todos los movimientos y escuchar el audio.
 
 Sin temblores, blur, sonidos o transiciones añadidos en este preset. La mezcla perceptual, color HLG, ritmo y exactitud de transcripción requieren revisión del usuario. La primera muestra sirve para decidir esos ajustes.
+
+
+## Revisión: texto grande, sombra y acentos animados
+
+El usuario pidió texto más grande, borde negro, algo de sombra y efectos más visibles. `bold-yellow-v2` conserva el texto blanco/amarillo y usa tamaño 0.10 (33 % mayor que v1), contorno negro 0.05 y tercera capa de sombreado negra, alpha 0.5, desplazamiento (0.025, -0.025) y suavidad 0.012. Máximo 18 caracteres por línea para evitar recortes. `bold-yellow-v1` conserva sus parámetros anteriores.
+
+```sh
+python3 scripts/prepare_captions.py RUTA_PLAN_V1 RUTA_TRANSCRIPCION outputs/plan-grande.json --preset bold-yellow-v2
+```
+
+El plan v2 acepta `style.events` opcional. Cada evento tiene `type`, `in_seconds`, `out_seconds`, `amount`; los tiempos se refieren al montaje final, como los subtítulos:
+
+| Tipo | Intensidad y duración |
+| --- | --- |
+| `punch_zoom` | Multiplicador 1.05–1.35, entre 4 frames y 3 s |
+| `shake` | Desplazamiento normalizado horizontal 0.001–0.015, entre 3 frames y 0.6 s; vertical al 65 % |
+
+Máximo 40 eventos, dentro de la timeline y sin solapamiento del mismo tipo. Zoom y temblor sí pueden coincidir. Los eventos se intersectan con cada clip conservando el tiempo de timeline. Entrada en 3 frames y salida en 4; el temblor añade sobreescaneo del 4 % para proteger los bordes. Su escala se multiplica por la del segmento y por el zoom activo. Los textos se componen después del Transform y permanecen estables.
+
+`plans/style-example.json` incluye ambos efectos con textos ficticios. El informe conserva muestras de escala/centro evaluadas por Resolve durante cada evento. Pruebas cubren límites, reset al finalizar, traslación a tiempo local y conservación de una frase mixta sin corregir gramática.
+
+Nueva muestra: `outputs/accents/20261103_004452_fe9bfd09/`, proyecto `AIEditor_Test_Accents_20261103_004452_fe9bfd09`. Misma selección y audio que la muestra anterior (695 frames, 23.167 s), 26 subtítulos, tres acentos de zoom y dos temblores. Render Complete: 9341 ms; ejecución 13.204 s. MP4 24 098 876 bytes, 1080 × 1920, 30 fps y AAC estéreo, comprobado tras reimportar. DRP reabierto en proyecto separado: tamaño/borde/sombra en los 26 nodos y expresiones de zoom/temblor conservados. Revisados fotogramas en tres acentos y un fotograma del MP4; pendiente revisión humana del movimiento completo y del audio. Dieciocho pruebas aprobadas.
+
+### Política de idioma confirmada
+
+Preservar español, inglés, cambios de idioma, acento y equivocaciones reales al hablar. La herramienta proyecta palabras sin traducir ni corregir gramática. No confundir errores del reconocimiento con errores hablados: los primeros requieren contraste con el audio; los segundos pueden ser parte del chiste. El detector de idioma principal no garantiza fidelidad en pasajes mixtos. En esta revisión se reutilizó la transcripción previa; no se certificó una nueva transcripción bilingüe ni se modificó el audio.

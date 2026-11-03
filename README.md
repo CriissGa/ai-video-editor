@@ -4,7 +4,7 @@ Automatización local para producir Shorts, Reels y TikToks con DaVinci Resolve 
 
 ## Estado
 
-Primer flujo de edición implementado y verificado con DaVinci Resolve Studio 21.1.2.10: plan JSON validado, importación, cortes, transcripción cacheada, subtítulos Fusion editables, zooms y borrador MP4.
+Primer flujo de edición implementado y verificado con DaVinci Resolve Studio 21.1.2.10: plan JSON validado, importación, cortes, transcripción cacheada, subtítulos Fusion editables, texto grande con borde/sombra, zooms animados, temblores y borrador MP4.
 
 Repositorio privado: [CriissGa/ai-video-editor](https://github.com/CriissGa/ai-video-editor).
 

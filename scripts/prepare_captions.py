@@ -8,9 +8,11 @@ import textwrap
 
 from edit_video import frame, load_plan, require
 from transcribe_video import file_hash
+from caption_style import PRESET, PRESETS
 
 
-def generate_captions(plan, transcript):
+def generate_captions(plan, transcript, preset=PRESET):
+    width = min(22, PRESETS[preset]['line_width'])
     fps = plan['timeline']['fps']
     require(transcript['fps'] == fps, 'FPS de transcripción distinto')
     captions = []
@@ -23,7 +25,7 @@ def generate_captions(plan, transcript):
         groups = []
         for word in words:
             text = ' '.join(w['text'] for w in group + [word]).upper()
-            lines = textwrap.wrap(text, width=22, break_long_words=False, break_on_hyphens=False)
+            lines = textwrap.wrap(text, width=width, break_long_words=False, break_on_hyphens=False)
             if group and (len(group) >= 4 or len(lines) > 2 or len(text) > 42 or
                           word['start_frame'] - group[-1]['end_frame'] > fps * 0.5):
                 groups.append(group)
@@ -43,7 +45,7 @@ def generate_captions(plan, transcript):
             text = ' '.join(w['text'] for w in group).upper()
             emphasis = any(token in text for token in ('PROFESSIONAL', 'FIRST TIME', 'MYSELF', 'CLASS', 'MY BEST', 'PAINT MY HAIR'))
             captions.append({'in_seconds': a / fps, 'out_seconds': b / fps,
-                             'text': '\n'.join(textwrap.wrap(text, width=22, break_long_words=False, break_on_hyphens=False)),
+                             'text': '\n'.join(textwrap.wrap(text, width=width, break_long_words=False, break_on_hyphens=False)),
                              'emphasis': emphasis})
         offset += end - start
     return captions
@@ -55,6 +57,7 @@ def main():
     parser.add_argument('transcript', type=Path)
     parser.add_argument('output', type=Path)
     parser.add_argument('--zooms', nargs='+', type=float)
+    parser.add_argument('--preset', choices=sorted(PRESETS), default=PRESET)
     args = parser.parse_args()
     try:
         plan = load_plan(args.plan.resolve())
@@ -63,8 +66,8 @@ def main():
         require(transcript['config']['source_sha256'] == file_hash(Path(plan['source'])), 'Transcripción corresponde a otro contenido')
         zooms = args.zooms or [1.0] * len(plan['segments'])
         require(len(zooms) == len(plan['segments']), 'Se requiere un zoom por segmento')
-        plan['captions'] = generate_captions(plan, transcript)
-        plan.update(schema_version=2, style={'preset': 'bold-yellow-v1'})
+        plan['captions'] = generate_captions(plan, transcript, args.preset)
+        plan.update(schema_version=2, style={'preset': args.preset})
         for segment, zoom in zip(plan['segments'], zooms):
             segment['zoom'] = zoom
         from caption_style import validate_style

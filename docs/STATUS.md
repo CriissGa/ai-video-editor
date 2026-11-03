@@ -31,17 +31,29 @@ El usuario confirmó que el primer borrador funcionó y autorizó continuar (202
 - Fotogramas de tres segmentos y un fotograma del MP4 revisados: texto legible y debajo del rostro en las muestras. Sin escucha o revisión completa del video.
 - Trece pruebas unitarias aprobadas. Transcripción y planes con texto real permanecen excluidos de Git; ejemplo v2 usa textos ficticios. Contratos y uso en `CAPTIONS_WORKFLOW.md`.
 
+## Tercer hito: revisión de texto y acentos
+
+El usuario indicó que le gusta la dirección, pidió texto mayor, borde negro/sombra y señaló que los zooms anteriores apenas se percibían. Confirmó que mezcla español e inglés y que equivocaciones al hablar pueden ser parte del humor; preferencias registradas en AGENTS y D008.
+
+- Preset `bold-yellow-v2`: texto 33 % mayor (0.10), borde negro 0.05 y sombra suave; líneas limitadas a 18 caracteres. El preset anterior se conserva.
+- Eventos explícitos reutilizables en `style.events`: tres zooms animados y dos temblores breves elegidos por remate. La selección, palabras y audio se mantuvieron para comparar el estilo.
+- Nuevo proyecto separado `AIEditor_Test_Accents_20261103_004452_fe9bfd09`, timeline `Hair story - large captions and accents`, guardado y abierto en Edit. Salidas privadas en `outputs/accents/20261103_004452_fe9bfd09/`.
+- 695 frames / 23.167 s, 26 nodos Text+. Render Complete, 9341 ms; ejecución 13.204 s. MP4 de 24 098 876 bytes, vertical 1080 × 1920, 30 fps y AAC estéreo, reimportado y comprobado.
+- DRP reabierto con otro nombre de prueba: tamaño/borde/sombra en los 26 textos y expresiones animadas conservados. GetInput confirmó cambio de escala, desplazamiento de temblor y vuelta al centro. Revisados tres fotogramas de acentos y uno del MP4.
+- Dieciocho pruebas aprobadas, incluida conservación de palabras mixtas sin normalizar gramática. Transcripción previa reutilizada; reconocimiento bilingüe completo aún pendiente de revisión contra audio.
+- Herramienta nueva `scripts/edit_effects.py`; `prepare_captions.py --preset` selecciona el preset y ajusta el ancho de líneas. Contrato y límites en `CAPTIONS_WORKFLOW.md`.
+
 ## Límites y pendientes
 
 - Revisar ritmo, exactitud del texto automático, voz y mezcla. El origen identifica HLG y seis canales; no se ha calibrado color ni mezcla perceptual.
-- El preset es una primera muestra: énfasis amarillo por frase, sin animación palabra por palabra, sonidos, blur, temblores o transiciones añadidos.
+- La revisión incluye zooms animados y temblores. Siguen pendientes animación palabra por palabra, sonidos, blur y transiciones; intensidad final sujeta a revisión del usuario.
 - Los subtítulos son nodos Fusion, no una pista nativa de subtítulos. DRP requiere conservar el original.
 - FPS enteros iguales entre fuente y timeline. Sin reanudación automática de montaje; repetir crea nuevo proyecto/salida. La transcripción sí permite reutilizar caché o continuar un proyecto de transcripción de prueba.
 - No se han medido tokens, costos ni esfuerzo manual. Notion documenta hitos mediante el agente, sin sincronización automática.
 
 ## Siguiente paso
 
-El usuario debe revisar la muestra editorial con subtítulos y zooms. Según sus comentarios, ajustar ritmo, idioma de subtítulos, tipografía, color e intensidad; después añadir efectos sonoros y acentos elegidos por remate, en otra ejecución de prueba.
+Revisar `outputs/accents/20261103_004452_fe9bfd09/draft.mp4` y ajustar tamaño/sombra e intensidad de los acentos según comentarios. Después revisar pasajes mixtos español/inglés contra el audio sin borrar sus equivocaciones cómicas; añadir sonidos solo cuando apoyen un remate.
 
 ## Dirección creativa confirmada
 

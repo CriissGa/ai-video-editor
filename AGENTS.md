@@ -56,3 +56,6 @@ AI Editor automatiza la producción de Shorts, Reels y TikToks usando DaVinci Re
 ## Estilo confirmado
 
 Videos grabados en vertical con cámara estática y el usuario a cámara. Humor rápido inspirado en recursos de Rubius y HolaSoyGerman, con identidad propia moderna. Subtítulos llamativos con color selectivo, frases destacadas, zooms, temblores, blur, transiciones y efectos sonoros. Mantener rostro visible, voz clara y pausas cómicas; elegir efectos según el remate, sin cadencias fijas. Retención como objetivo a medir, sin garantías.
+
+
+El usuario habla español e inglés y puede mezclarlos o equivocarse al hablar como parte del humor. Preservar idioma, acento, cambios de idioma y errores hablados; no traducir ni corregir gramática automáticamente. Distinguir errores del reconocimiento de voz (corregibles tras verificar audio) de lo que realmente dijo. Preferencia confirmada: subtítulos más grandes, borde negro y algo de sombra; zooms y temblores perceptibles elegidos por remate.
