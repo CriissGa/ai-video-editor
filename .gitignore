@@ -1,0 +1,45 @@
+# Entorno y secretos
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+.DS_Store
+
+# Python y herramientas
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+node_modules/
+
+# Material privado y artefactos generados
+media/
+input/
+inputs/
+output/
+outputs/
+exports/
+renders/
+cache/
+.cache/
+transcripts/
+logs/
+*.log
+*.mp4
+*.mov
+*.mkv
+*.webm
+*.wav
+*.mp3
+*.m4a
+*.aiff
+*.flac
+
+# Proyectos y cachés de Resolve
+*.drp
+*.dra/
+CacheClip/
+.gallery/
