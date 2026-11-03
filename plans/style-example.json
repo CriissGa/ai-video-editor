@@ -22,7 +22,7 @@
   ],
   "output_dir": "../outputs/style-example",
   "style": {
-    "preset": "bold-yellow-v2",
+    "preset": "bold-party-v3",
     "events": [
       {
         "type": "punch_zoom",

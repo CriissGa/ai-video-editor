@@ -73,3 +73,10 @@ El plan deberá describir eventos con tiempo, duración, intensidad y referencia
 
 
 `scripts/edit_effects.py` valida eventos opcionales `style.events` en el plan v2 y genera expresiones de escala/posición para el Transform del video. Tipos actuales: `punch_zoom` y `shake`, con tiempo e intensidad limitados y sin solapamientos del mismo tipo. La escala base del segmento se conserva; los acentos son multiplicadores temporales. `caption_style.py` comprueba muestras reales de animación con GetInput y registra los valores en el informe. El preset anterior permanece disponible; `bold-yellow-v2` aumenta tamaño/borde y añade sombra.
+
+
+## Sonidos y ruta MCP
+
+`prepare_sounds.py` cataloga medios de `sonidos/` y conserva copias PCM cacheadas, sin modificar originales. `sound_edit.py` valida recortes, posiciones, ganancias y fundidos, importa medios y monta una pista SFX separada. El plan v2 admite `audio` opcional. `edit_video.export_draft` se comparte entre ejecución normal y recuperación mediante MCP.
+
+La integración nativa con SFX produjo dos fallos Qt de Resolve y quedó bloqueada en la CLI. Validar sigue disponible; montaje/exportación con sonidos se completaron mediante funciones locales invocadas desde MCP en etapas separadas. No se considera estable ni probada la ruta nativa completa de audio. Los presets sin audio conservan su CLI; los workers tienen timeout externo para no quedar esperando indefinidamente si se pierde Resolve. Contrato y evidencia en `SOUND_WORKFLOW.md`.

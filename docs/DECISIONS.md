@@ -66,3 +66,12 @@ Estado: preferencia creativa confirmada por el usuario (2026-11-03); nueva muest
 Preservar el español/inglés mezclado, el acento y equivocaciones al hablar como recursos de humor. Corregir errores de transcripción solo al contrastarlos con el audio, sin normalizar automáticamente la gramática ni traducir. La transcripción automática por idioma dominante no se considera resuelta para todos los pasajes mixtos.
 
 Aumentar subtítulos, mantener borde negro y añadir sombra suave. Usar zooms animados y temblores breves según remates, sin cadencia fija. Preset `bold-yellow-v2` separado del anterior para conservar reproducibilidad: tamaño 0.10, contorno 0.05, sombra negra semitransparente. Eventos explícitos en tiempo de timeline, implementados sobre el video antes de los textos para mantener legibilidad.
+
+
+## D009 — Palabras de foco y biblioteca sonora local
+
+Estado: dirección creativa solicitada; muestra verificada y pendiente de revisión del usuario.
+
+Usar un preset nuevo más alegre/exagerado, con palabras importantes mayores, pop de entrada, borde más grueso y sonidos elegidos según cortes/remates. Conservar presets anteriores. Biblioteca `sonidos/` privada, con copias de trabajo y selección persistida en el plan, pista SFX independiente y ganancias/fundidos ajustables; no añadir sonidos con cadencia fija.
+
+Restricción verificada de implementación: tras dos cierres Qt al ejecutar el flujo nativo con audio, bloquear esa ruta de CLI y completar etapas mediante MCP. La recuperación/exportación por MCP está comprobada; la causa del fallo nativo sigue sin aislarse y no se declara resuelta.

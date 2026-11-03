@@ -47,3 +47,6 @@ CacheClip/
 # Extensiones de cámara en mayúsculas
 *.MOV
 *.MP4
+
+# Biblioteca de sonidos aportada por el usuario
+sonidos/

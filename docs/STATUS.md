@@ -43,17 +43,31 @@ El usuario indicó que le gusta la dirección, pidió texto mayor, borde negro/s
 - Dieciocho pruebas aprobadas, incluida conservación de palabras mixtas sin normalizar gramática. Transcripción previa reutilizada; reconocimiento bilingüe completo aún pendiente de revisión contra audio.
 - Herramienta nueva `scripts/edit_effects.py`; `prepare_captions.py --preset` selecciona el preset y ajusta el ancho de líneas. Contrato y límites en `CAPTIONS_WORKFLOW.md`.
 
+## Cuarto hito: palabras de foco y sonidos
+
+El usuario pidió una edición más alegre/exagerada, palabras importantes mayores y bordes más gruesos, y aportó siete archivos en `sonidos/`.
+
+- Preset `bold-party-v3`: texto normal 0.105, palabras de foco 0.14 con pop inicial de seis frames, borde negro 0.075 y sombra. El preparador separa palabras de foco en español/inglés sin corregir gramática. Presets previos disponibles.
+- Catálogo local de siete sonidos: copias PCM16 estéreo/48 kHz cacheadas por SHA-256, duraciones/picos y regiones activas. No hubo servicios externos ni dependencias nuevas; `afconvert` funcionó fuera del sandbox.
+- Se produjeron **dos cierres de Studio 21.1.2.10** durante el flujo nativo con importación de sonidos, con assertion Qt `QList::insert`. No se identificó causa única. El segundo dejó worker esperando; se terminó solo ese worker. El usuario cerró el aviso de reporte y reabrió Resolve.
+- Recuperación verificada mediante llamadas MCP separadas sobre el proyecto de prueba guardado. La CLI valida planes con audio pero bloquea su ejecución nativa antes de conectar; no repetir esos lotes. Las funciones de audio y exportación se usan desde MCP. Detalle en `SOUND_WORKFLOW.md`.
+- Proyecto final `AIEditor_Test_Playful_20261103_010423_81a230c0`, timeline `Hair story - playful words and SFX`, guardado y abierto en Edit. Artefactos en `outputs/playful/mcp_20261103_011224_b0cb313c/`.
+- 695 frames / 23.167 s, 35 textos, tres zooms/dos temblores algo más intensos y cinco SFX en pista A6. Cuatro archivos distintos usados; ganancias -20/-18 dB con fundidos 1/2 frames, voz -3 dB.
+- Render Complete: 10292 ms; exportación medida 11.842 s (sin incluir fallos, montaje o desarrollo). MP4 24 094 690 bytes, 1080 × 1920/30 fps/AAC estéreo, reimportado y comprobado. Pico PCM decodificado -2.93 dBFS (no true peak); sin revisión auditiva completa.
+- DRP reabierto en proyecto separado: 35 textos con borde 0.075 y cinco SFX online conservados. Fotogramas de tres palabras importantes revisados.
+- Veinticuatro pruebas aprobadas, incluida la guardia que impide ejecutar audio por la ruta nativa. Medios originales, copias PCM, transcripción y planes reales siguen fuera de Git.
+
 ## Límites y pendientes
 
 - Revisar ritmo, exactitud del texto automático, voz y mezcla. El origen identifica HLG y seis canales; no se ha calibrado color ni mezcla perceptual.
-- La revisión incluye zooms animados y temblores. Siguen pendientes animación palabra por palabra, sonidos, blur y transiciones; intensidad final sujeta a revisión del usuario.
+- La revisión incluye zooms/temblores, pop de palabras importantes y SFX. Siguen pendientes resaltado continuo palabra por palabra, blur y transiciones visuales; mezcla e intensidad final sujetas a revisión del usuario.
 - Los subtítulos son nodos Fusion, no una pista nativa de subtítulos. DRP requiere conservar el original.
 - FPS enteros iguales entre fuente y timeline. Sin reanudación automática de montaje; repetir crea nuevo proyecto/salida. La transcripción sí permite reutilizar caché o continuar un proyecto de transcripción de prueba.
 - No se han medido tokens, costos ni esfuerzo manual. Notion documenta hitos mediante el agente, sin sincronización automática.
 
 ## Siguiente paso
 
-Revisar `outputs/accents/20261103_004452_fe9bfd09/draft.mp4` y ajustar tamaño/sombra e intensidad de los acentos según comentarios. Después revisar pasajes mixtos español/inglés contra el audio sin borrar sus equivocaciones cómicas; añadir sonidos solo cuando apoyen un remate.
+Revisar `outputs/playful/mcp_20261103_011224_b0cb313c/draft.mp4`, especialmente tamaño de palabras y balance voz/SFX. Mantener operaciones de sonidos mediante MCP; diagnosticar la ruta nativa en un hito separado antes de habilitarla. Después ajustar pasajes mixtos contra audio preservando las equivocaciones cómicas.
 
 ## Dirección creativa confirmada
 

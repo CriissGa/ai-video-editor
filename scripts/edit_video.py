@@ -44,7 +44,7 @@ def load_plan(path):
     version = plan.get('schema_version')
     require(type(version) is int and version in (1, 2), 'Versión no soportada')
     fields = ['schema_version', 'source', 'project_prefix', 'timeline', 'segments', 'output_dir']
-    keys(plan, fields + (['captions', 'style'] if version == 2 else []))
+    keys(plan, fields + (['captions', 'style'] + (['audio'] if 'audio' in plan else []) if version == 2 else []))
     require(isinstance(plan['project_prefix'], str) and
             re.fullmatch(r'AIEditor_Test_[A-Za-z0-9_-]{1,50}', plan['project_prefix']), 'Prefijo de proyecto de prueba inválido')
     for key in ('source', 'output_dir'):
@@ -73,6 +73,10 @@ def load_plan(path):
     if version == 2:
         from caption_style import validate_style
         validate_style(plan)
+        if 'audio' in plan:
+            from sound_edit import validate_audio
+            duration = sum(frame(s['out_seconds'], tl['fps']) - frame(s['in_seconds'], tl['fps']) for s in plan['segments'])
+            validate_audio(plan['audio'], path, tl['fps'], duration)
     return plan
 
 
@@ -96,12 +100,14 @@ def source_ranges(plan, props):
     return ranges
 
 
-def verify_timeline(timeline, ranges):
+def verify_timeline(timeline, ranges, allowed_audio_tracks=()):
     expected = [end - start for start, end in ranges]
     origin = timeline.GetStartFrame()
     for kind in ('video', 'audio'):
         require(timeline.GetTrackCount(kind) >= 1, 'Falta pista ' + kind)
         for index in range(2, timeline.GetTrackCount(kind) + 1):
+            if kind == 'audio' and index in allowed_audio_tracks:
+                continue
             require(not timeline.GetItemListInTrack(kind, index), 'Pista adicional con contenido: ' + kind)
         items = timeline.GetItemListInTrack(kind, 1) or []
         require(len(items) == len(ranges), 'Cantidad de clips incorrecta: ' + kind)
@@ -133,6 +139,10 @@ def execute(plan, resolve, report, save, timeout):
     ranges = source_ranges(plan, props)
     report.update(stage='source_validated', source={k: props[k] for k in ('FPS', 'Frames', 'Resolution', 'Audio Ch')}, ranges=ranges)
     save()
+    sound_media = {}
+    if 'audio' in plan:
+        from sound_edit import import_sounds
+        sound_media = import_sounds(pool, plan['audio'], tl['fps'])
     timeline = pool.CreateEmptyTimeline(tl['name'])
     require(timeline is not None and project.SetCurrentTimeline(timeline), 'No se pudo crear timeline')
     for start, end in ranges:
@@ -144,15 +154,28 @@ def execute(plan, resolve, report, save, timeout):
         require(float(settings[key]) == value, 'Ajuste de timeline incorrecto: ' + key)
     require(pm.SaveProject(), 'No se pudo guardar proyecto')
     report.update(stage='timeline_verified', timeline=tl['name'])
+    if 'audio' in plan:
+        from sound_edit import apply_audio
+        report['audio'] = apply_audio(project, timeline, plan['audio'], sound_media, tl['fps'])
+        verify_timeline(timeline, ranges, [report['audio']['track']])
+        report['stage'] = 'audio_verified'
+        require(pm.SaveProject(), 'No se pudo guardar mezcla')
+    save()
     if plan['schema_version'] == 2:
         from caption_style import apply_style, write_srt
         require(resolve.OpenPage('edit'), 'No se pudo abrir Edit para Fusion')
         report['style'] = apply_style(timeline, plan, Path(report['run_dir']))
-        verify_timeline(timeline, ranges)
+        verify_timeline(timeline, ranges, [report['audio']['track']] if 'audio' in report else [])
         write_srt(plan['captions'], tl['fps'], Path(report['run_dir']) / 'captions.srt')
         report['stage'] = 'style_verified'
         require(pm.SaveProject(), 'No se pudo guardar estilo')
     save()
+    export_draft(project, pm, plan, report, save, timeout)
+
+
+def export_draft(project, pm, plan, report, save, timeout):
+    tl = plan['timeline']
+    name = project.GetName()
     run_dir = Path(report['run_dir'])
     backup = run_dir / 'editable.drp'
     require(not backup.exists() and pm.ExportProject(name, str(backup), False), 'No se pudo exportar proyecto editable')
@@ -202,11 +225,16 @@ def main():
         if not args.execute:
             print(json.dumps({'status': 'valid', 'scope': 'estructura y archivos; metadatos y rangos se comprueban en Resolve antes de crear timeline'}, ensure_ascii=True))
             return 0
+        require('audio' not in plan, 'La ruta nativa con SFX queda bloqueada tras dos cierres Qt de Resolve; usar sound_edit y export_draft mediante MCP')
         if not args.worker:
             diagnostic = diagnose(APP, 30)
             require(diagnostic['status'] == 'ok', 'Diagnóstico: ' + diagnostic['status'])
-            return subprocess.run([str(APP / 'Contents/Applications/ResolvePython'), str(Path(__file__).resolve()),
-                                   str(path), '--execute', '--worker', '--render-timeout', str(args.render_timeout)], check=False).returncode
+            try:
+                return subprocess.run([str(APP / 'Contents/Applications/ResolvePython'), str(Path(__file__).resolve()),
+                                       str(path), '--execute', '--worker', '--render-timeout', str(args.render_timeout)],
+                                      check=False, timeout=args.render_timeout + 120).returncode
+            except subprocess.TimeoutExpired:
+                raise ValueError('Worker sin respuesta: comprobar Resolve e informe antes de reintentar')
         import DaVinciResolveScript as api
         resolve = api.scriptapp('Resolve')
         require(resolve is not None, 'Resolve inaccesible')

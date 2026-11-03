@@ -49,3 +49,6 @@ python3 scripts/transcribe_video.py prueba.MOV
 ```
 
 Consulta [subtítulos, plan v2 y preset de estilo](docs/CAPTIONS_WORKFLOW.md). Los textos reales, planes editoriales y transcripciones se guardan en carpetas privadas excluidas de Git; el ejemplo versionado usa textos ficticios.
+
+
+Para preparar la biblioteca de sonidos local y usar el preset con palabras importantes más grandes, consulta [palabras de foco, sonidos y límites de ejecución](docs/SOUND_WORKFLOW.md). El montaje de SFX se opera mediante MCP: la CLI valida esos planes, pero bloquea su ejecución nativa tras dos cierres observados de Resolve.

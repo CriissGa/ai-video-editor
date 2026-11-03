@@ -5,6 +5,7 @@ import json
 from pathlib import Path
 import re
 import textwrap
+import string
 
 from edit_video import frame, load_plan, require
 from transcribe_video import file_hash
@@ -13,6 +14,7 @@ from caption_style import PRESET, PRESETS
 
 def generate_captions(plan, transcript, preset=PRESET):
     width = min(22, PRESETS[preset]['line_width'])
+    focus = PRESETS[preset].get('focus_words', [])
     fps = plan['timeline']['fps']
     require(transcript['fps'] == fps, 'FPS de transcripción distinto')
     captions = []
@@ -24,6 +26,12 @@ def generate_captions(plan, transcript, preset=PRESET):
         group = []
         groups = []
         for word in words:
+            if word['text'].upper().strip(string.punctuation + '¿¡') in focus:
+                if group:
+                    groups.append(group)
+                    group = []
+                groups.append([word])
+                continue
             text = ' '.join(w['text'] for w in group + [word]).upper()
             lines = textwrap.wrap(text, width=width, break_long_words=False, break_on_hyphens=False)
             if group and (len(group) >= 4 or len(lines) > 2 or len(text) > 42 or
@@ -44,6 +52,8 @@ def generate_captions(plan, transcript, preset=PRESET):
                 continue
             text = ' '.join(w['text'] for w in group).upper()
             emphasis = any(token in text for token in ('PROFESSIONAL', 'FIRST TIME', 'MYSELF', 'CLASS', 'MY BEST', 'PAINT MY HAIR'))
+            if focus:
+                emphasis = len(group) == 1 and group[0]['text'].upper().strip(string.punctuation + '¿¡') in focus
             captions.append({'in_seconds': a / fps, 'out_seconds': b / fps,
                              'text': '\n'.join(textwrap.wrap(text, width=width, break_long_words=False, break_on_hyphens=False)),
                              'emphasis': emphasis})

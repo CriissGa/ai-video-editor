@@ -59,3 +59,6 @@ Videos grabados en vertical con cámara estática y el usuario a cámara. Humor 
 
 
 El usuario habla español e inglés y puede mezclarlos o equivocarse al hablar como parte del humor. Preservar idioma, acento, cambios de idioma y errores hablados; no traducir ni corregir gramática automáticamente. Distinguir errores del reconocimiento de voz (corregibles tras verificar audio) de lo que realmente dijo. Preferencia confirmada: subtítulos más grandes, borde negro y algo de sombra; zooms y temblores perceptibles elegidos por remate.
+
+
+Dirección adicional confirmada: edición más alegre y exagerada, palabras importantes de mayor tamaño y contornos más gruesos. Los sonidos aportados en `sonidos/` son medios locales privados; seleccionar y recortar según cortes/remates, en pista SFX independiente, sin tapar la voz. Ante cierres de Resolve, conservar avances, diagnosticar y preferir operaciones MCP separadas. La ejecución nativa con SFX quedó bloqueada explícitamente tras dos fallos Qt observados; no repetirla sin resolver la causa.

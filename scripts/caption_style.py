@@ -3,7 +3,9 @@ from edit_video import frame, keys, number, require
 
 PRESET = 'bold-yellow-v1'
 PRESETS = {PRESET: {'size': 0.075, 'outline': 0.035, 'shadow': False, 'line_width': 24},
-           'bold-yellow-v2': {'size': 0.10, 'outline': 0.05, 'shadow': True, 'line_width': 18}}
+           'bold-yellow-v2': {'size': 0.10, 'outline': 0.05, 'shadow': True, 'line_width': 18},
+           'bold-party-v3': {'size': 0.105, 'emphasis_size': 0.14, 'outline': 0.075, 'shadow': True, 'line_width': 16,
+                             'focus_words': ['PROFESSIONAL', 'PROFESIONAL', 'MYSELF', 'SOLO', 'BEST', 'MEJOR', 'CLASS', 'CLASE', 'HAIR', 'PELO']}}
 
 
 def validate_style(plan):
@@ -72,8 +74,9 @@ def apply_style(timeline, plan, run_dir):
             count += 1
             text = comp.AddTool('TextPlus')
             text.SetAttrs({'TOOLS_Name': 'Caption_%03d' % count})
+            text_size = preset.get('emphasis_size', preset['size']) if caption['emphasis'] else preset['size']
             for key, value in {'StyledText': caption['text'], 'Font': 'Arial', 'Style': 'Bold',
-                'Size': preset['size'], 'Center': {1: 0.5, 2: 0.25}, 'Red1': 1.0,
+                'Size': text_size, 'Center': {1: 0.5, 2: 0.25}, 'Red1': 1.0,
                 'Green1': 0.85 if caption['emphasis'] else 1.0,
                 'Blue1': 0.12 if caption['emphasis'] else 1.0,
                 'Enabled2': 1, 'SelectElement': 1, 'ElementShape2': 1, 'Thickness2': preset['outline'],
@@ -84,7 +87,7 @@ def apply_style(timeline, plan, run_dir):
                     'Red3': 0, 'Green3': 0, 'Blue3': 0, 'Alpha3': 0.5,
                     'Offset3': {1: 0.025, 2: -0.025}, 'SoftnessX3': 0.012, 'SoftnessY3': 0.012}.items():
                     text.SetInput(key, value)
-            require(text.GetInput('Size') == preset['size'] and text.GetInput('Thickness2') == preset['outline'], 'Tamaño o borde no aplicado')
+            require(text.GetInput('Size') == text_size and text.GetInput('Thickness2') == preset['outline'], 'Tamaño o borde no aplicado')
             if preset['shadow']:
                 require(text.GetInput('Enabled3') == 1 and text.GetInput('Alpha3') == 0.5, 'Sombra no aplicada')
             require(text.GetInput('StyledText') == caption['text'], 'Texto no aplicado')
@@ -95,9 +98,12 @@ def apply_style(timeline, plan, run_dir):
             merge.Blend.SetExpression('iif(time >= %d and time < %d, 1, 0)' % (begin, finish))
             require(merge.GetInput('Blend', begin) == 1 and merge.GetInput('Blend', finish) == 0,
                     'Temporización de subtítulo incorrecta')
+            if 'emphasis_size' in preset and caption['emphasis']:
+                text.Size.SetExpression('%.8f*(1+iif(time >= %d and time < %d, 0.12*sin((time-%d)/6*3.14159265), 0))' % (text_size, begin, begin+6, begin))
+                require(text.GetInput('Size', begin+3) > text_size, 'Pop de palabra no aplicado')
             background = merge
         require(media_out.ConnectInput('Input', background), 'No se pudo conectar salida Fusion')
-        if captions:
+        if captions and 'emphasis_size' not in preset:
             _, start, end = captions[min(1, len(captions)-1)]
             path = run_dir / ('preview-%02d.png' % (index + 1))
             exported = item.ExportFrame((start + end) // 2, {'outputType': 'file', 'filePath': str(path), 'maxDimension': 960})
