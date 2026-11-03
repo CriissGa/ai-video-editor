@@ -28,7 +28,7 @@ Motivo: contar con documentación consultable sin hacer depender la ejecución t
 
 ## D004 — Python, JSON y comandos locales
 
-Estado: propuesta técnica inicial; pendiente de validar con el primer flujo.
+Estado: aceptada y validada con el primer flujo solicitado por el usuario (2026-11-03).
 
 Empezar con Python, planes JSON y comandos locales. Añadir un MCP propio después si mejora la operación desde los agentes.
 
@@ -39,3 +39,12 @@ Motivo: implementar y depurar el flujo mínimo con pocas piezas y permitir reuti
 Estado: aceptada por el usuario.
 
 Usar Git y GitHub CLI desde terminal. Hacer commit y push automáticamente al completar hitos coherentes y verificados, incluyendo solo cambios de la tarea. No usar force push ni publicar secretos, medios originales o artefactos generados. Repositorio privado: CriissGa/ai-video-editor.
+
+
+## D006 — Contrato mínimo de montaje v1
+
+Estado: implementado y verificado para el primer flujo solicitado.
+
+Una fuente vertical con audio, tiempos en segundos relativos al inicio, intervalos [entrada, salida), redondeo half-up a frames y FPS enteros iguales entre fuente y timeline. Montaje secuencial en el orden del plan; sin conversión de FPS en esta versión. Contrato completo en `EDIT_WORKFLOW.md`.
+
+Cada ejecución crea un proyecto `AIEditor_Test_…` y salida exclusiva; conserva plan, informe, DRP y MP4. Repetir crea otra ejecución, no reanuda ni sobrescribe. Esta primera implementación registra etapas para diagnóstico; la reanudación automática sigue pendiente. Sin subtítulos o efectos en este hito.

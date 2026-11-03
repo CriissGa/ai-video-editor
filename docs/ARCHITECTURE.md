@@ -27,18 +27,20 @@ Un conjunto de herramientas locales operado por un agente, con DaVinci Resolve S
 
 El flujo debe permitir repetir una exportación sin volver a pedir decisiones al modelo.
 
-## Contratos propuestos
+## Contratos y evolución
 
 - Python para herramientas locales y JSON para planes de edición.
 - Comandos locales como primera interfaz; MCP propio solo si facilita su uso después.
 - MCP de Resolve existente para explorar capacidades y realizar pruebas de integración.
 - Plan y resultados persistidos para continuar un trabajo desde otro agente.
 - Validación de versión del plan, fuentes y rangos antes de ejecutar.
-- Convención explícita de tiempos y conversión a frames según la fuente y la timeline; falta definir el esquema exacto.
-- Registro de etapas completadas y artefactos producidos para reanudar sin duplicar operaciones.
-- Caché vinculada al contenido de entrada y a los parámetros relevantes, con invalidación cuando cambien.
+- Convención de tiempos y conversión a frames definida para v1 en `EDIT_WORKFLOW.md`.
+- Registro de etapas completadas y artefactos producidos; reanudación sin duplicaciones pendiente.
+- Evolución pendiente: caché vinculada al contenido y parámetros con invalidación.
 
-La primera herramienta implementada es `scripts/diagnose_resolve.py`: CLI de lectura para macOS, salida JSON versionada y subproceso con tiempo límite usando ResolvePython. Comprueba versión y acceso al gestor sin obtener proyectos. El resto de estas interfaces todavía no está implementado. Definir el esquema mínimo con el primer caso real, evitando generalizar antes de probarlo.
+Herramientas implementadas: `scripts/diagnose_resolve.py` verifica conectividad de lectura mediante ResolvePython y subproceso con tiempo límite. `scripts/edit_video.py` valida el plan local, reutiliza el diagnóstico y ejecuta importación, montaje, comprobaciones y render con código local, sin IA por operación. El mismo módulo contiene el adaptador mínimo de Resolve para evitar capas prematuras.
+
+Contrato v1 y resultados en `EDIT_WORKFLOW.md`: una fuente vertical con audio, FPS enteros iguales, rangos [entrada, salida) redondeados half-up a frames. El plan reside en `plans/`; medios y resultados privados en rutas locales excluidas de Git. Cada ejecución conserva plan resuelto, informe de etapas, copia DRP y MP4 en una carpeta exclusiva. Se comprueban fuente y rangos antes de crear timeline, y clips de video/audio antes de renderizar. No hay reanudación automática ni caché implementadas todavía; repetir crea otra ejecución aislada.
 
 ## Primer alcance propuesto
 
@@ -54,7 +56,7 @@ Un archivo hablado, un segmento indicado por tiempos, timeline vertical de 1080 
 
 ## Verificación pendiente
 
-Versión y acceso de scripting confirmados con Studio 21.1.2.10 (ver `RESOLVE_DIAGNOSTIC.md`). Pendiente: importación, montaje por rangos, subtítulos y render. Después probar tres videos representativos y medir correcciones manuales, tiempo de proceso y consumo de IA.
+Versión y acceso de scripting confirmados con Studio 21.1.2.10 (ver `RESOLVE_DIAGNOSTIC.md`). Importación, montaje por rangos, timeline editable, DRP y render MP4 verificados en Studio 21.1.2.10 con dos cortes y 300 frames. Pendiente: revisión perceptual de color/mezcla, subtítulos y efectos. Después probar tres videos representativos y medir correcciones manuales, tiempo de proceso y consumo de IA.
 
 ## Dirección creativa y eventos de edición
 

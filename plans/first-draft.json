@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "source": "../prueba.MOV",
+  "project_prefix": "AIEditor_Test_FirstDraft",
+  "timeline": {"name": "Primer borrador", "width": 1080, "height": 1920, "fps": 30},
+  "segments": [
+    {"in_seconds": 0, "out_seconds": 5},
+    {"in_seconds": 10, "out_seconds": 15}
+  ],
+  "output_dir": "../outputs/first-draft"
+}

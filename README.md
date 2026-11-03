@@ -4,7 +4,7 @@ Automatización local para producir Shorts, Reels y TikToks con DaVinci Resolve 
 
 ## Estado
 
-Primer diagnóstico local implementado y verificado con DaVinci Resolve Studio 21.1.2.10. Todavía no hay operaciones de edición implementadas.
+Primer flujo de edición implementado y verificado con DaVinci Resolve Studio 21.1.2.10: plan JSON validado, importación, cortes, timeline editable y borrador MP4.
 
 Repositorio privado: [CriissGa/ai-video-editor](https://github.com/CriissGa/ai-video-editor).
 
@@ -16,9 +16,9 @@ Repositorio privado: [CriissGa/ai-video-editor](https://github.com/CriissGa/ai-v
 - [Decisiones](docs/DECISIONS.md): acuerdos duraderos y motivos.
 - [Página de Notion](https://app.notion.com/p/40df9c3147ed811a95c8cf8ca6eb3eb0): planificación e hitos del proyecto.
 
-## Primer flujo propuesto
+## Primer flujo disponible
 
-Video original → selección de un segmento por tiempos → timeline vertical editable → subtítulos con estilo → borrador exportado.
+Video original → plan JSON con segmentos por tiempos → proyecto de prueba y timeline vertical editable → borrador MP4 y copia DRP. Los subtítulos y efectos son el próximo hito.
 
 La selección automática de segmentos y una interfaz propia se evaluarán después de validar el flujo básico. El contenido inicial será grabado en vertical con cámara estática, con edición cómica rápida, subtítulos llamativos, zooms, temblores, blur y acentos sonoros.
 
@@ -32,4 +32,11 @@ python3 scripts/diagnose_resolve.py
 
 Sin paquetes adicionales. Consulta [uso, resultados y resolución de errores](docs/RESOLVE_DIAGNOSTIC.md).
 
-Los medios originales, cachés, transcripciones y exportaciones se mantendrán fuera de la documentación y del control de versiones. Su ubicación se definirá durante la primera implementación.
+Para validar y ejecutar el plan de muestra con el video local:
+
+```sh
+python3 scripts/edit_video.py plans/first-draft.json
+python3 scripts/edit_video.py plans/first-draft.json --execute
+```
+
+Consulta [contrato JSON, resultados y límites](docs/EDIT_WORKFLOW.md). Cada ejecución crea un proyecto de prueba nuevo y una carpeta exclusiva bajo `outputs/first-draft/`. Los medios, DRP e informes generados quedan fuera de Git.

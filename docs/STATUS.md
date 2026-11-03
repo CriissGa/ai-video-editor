@@ -2,45 +2,33 @@
 
 ## Situación actual
 
-Fase: primer diagnóstico local completado. CLI reutilizable en `scripts/diagnose_resolve.py`, sin dependencias externas. Conexión real de lectura verificada; no hay código de edición todavía.
+Primer flujo completo implementado y verificado el 2026-11-03 (America/Phoenix), con DaVinci Resolve Studio 21.1.2.10. Herramientas locales Python sin dependencias externas: diagnóstico y ejecutor de planes JSON. Repositorio privado: https://github.com/CriissGa/ai-video-editor.
 
-Repositorio privado creado: https://github.com/CriissGa/ai-video-editor. Git y GitHub CLI (`gh`) están disponibles y la autenticación fue verificada. La documentación inicial y `.gitignore` constituyen el primer hito versionado.
+## Hito verificado
 
-El usuario autorizó commits y push al cerrar hitos verificados y pidió usar terminal con `git`/`gh`, evitando Computer Use para estas tareas. La regla quedó registrada en `AGENTS.md` y se añadió `.gitignore`.
+- `scripts/edit_video.py` valida JSON, archivos y parámetros; reutiliza el diagnóstico existente y ejecuta con ResolvePython 3.14.4 fuera del sandbox.
+- Plan `plans/first-draft.json`: fuente local `prueba.MOV`, cortes 0–5 s y 10–15 s. Selección técnica para validar el montaje, sin criterio editorial aplicado todavía.
+- Fuente: vertical 1080 × 1920, 30 fps, 3635 frames y seis canales de audio. Solo metadatos técnicos mínimos en los informes.
+- Proyecto separado final: `AIEditor_Test_FirstDraft_20261103_001812_b2c4b70c`, timeline `Primer borrador`, guardado y dejado abierto. No se editaron proyectos originales.
+- Verificados posiciones, offsets y duración de los dos clips en video y audio: 300 frames, 10 segundos. Pistas extra vacías.
+- Render Complete, 100 %, 2607 ms informados por Resolve; ejecución del flujo 5.367 s. No incluye desarrollo, revisiones o pruebas fallidas; no representa ahorro ni costo de IA.
+- Artefactos locales: `outputs/first-draft/20261103_001812_b2c4b70c/`: `draft.mp4` (10 400 034 bytes), `editable.drp`, `plan.json` y `result.json`.
+- MP4 reimportado en otro proyecto de prueba y metadatos comprobados: H.264, AAC estéreo, 1080 × 1920, 30 fps, 300 frames y duración 00:00:10:00. Después se volvió a abrir el proyecto final.
+- Siete pruebas unitarias aprobadas (diagnóstico, validación, conversión de tiempos y detección de cortes incorrectos).
+- Proyectos y artefactos de intentos fallidos conservados para diagnóstico; no se eliminan automáticamente. Detalles de compatibilidad en `EDIT_WORKFLOW.md`.
 
-## Confirmado
+## Límites y pendientes
 
-- El usuario quiere producir Shorts, Reels y TikToks con eficiencia y consumo controlado de tokens.
-- El usuario dispone de una licencia de DaVinci Resolve Studio.
-- Se aceptó la dirección de herramientas locales operadas por Codex o Claude.
-- Se creó una página de Notion para documentar el proyecto; enlace en `README.md`.
-- Se crearon instrucciones compartidas y documentos de arquitectura, estado y decisiones.
-
-## Pendientes que afectan el alcance
-
-- Video de muestra y referencia del resultado deseado.
-- Importación, montaje, subtítulos y render todavía sin comprobar.
-- Afinar tipografía, paleta e intensidad de efectos con una muestra.
-- Ubicación de medios y artefactos de trabajo.
-- Presupuesto y límites de IA, después de medir un caso representativo.
+- Falta revisión humana de imagen, voz y mezcla. El origen identifica HLG y tiene seis canales; no se ha calibrado color ni mezcla perceptual.
+- Sin subtítulos, efectos ni selección automática en este hito. La copia DRP requiere el video original en su ruta.
+- Esta versión requiere una fuente vertical con audio y FPS enteros iguales a la timeline. No hay reanudación automática; repetir crea nuevo proyecto y salida.
+- No se han medido tokens, costos ni esfuerzo manual. Sin servidor o interfaz propios.
+- Notion actualizado con el estado y el hito verificado; documenta mediante el agente, sin sincronización automática. README contiene su enlace.
 
 ## Siguiente paso
 
-Elegir un clip vertical y un segmento por tiempos; definir el plan JSON mínimo y su validación antes de probar importación, montaje y render en un proyecto de prueba separado.
-
-## Orden de implementación propuesto
-
-1. Conexión básica verificada; validar capacidades de edición en proyecto de prueba.
-2. Definir el plan JSON mínimo y su validación.
-3. Ejecutar cortes indicados manualmente y exportar un borrador editable.
-4. Añadir subtítulos y estilo reutilizable.
-5. Medir el flujo con tres videos.
-6. Añadir selección con IA y, si aporta valor, una interfaz MCP propia.
-
-## Última actualización
-
-Hito de diagnóstico (2026-11-03, America/Phoenix): instalación 21.1.2; API real DaVinci Resolve Studio 21.1.2.10, gestor accesible, ResolvePython 3.14.4, salida `ok` y código 0 fuera del sandbox. Dentro del sandbox devolvió `unreachable` aun con Resolve abierto. Se inició la aplicación y se dejó abierta; no se ejecutaron llamadas de apertura, creación, guardado o modificación de proyectos. Tres pruebas unitarias aprobadas. Detalles y límites en `docs/RESOLVE_DIAGNOSTIC.md`. No se usaron medios reales.
+Revisar el borrador técnico y elegir un fragmento con sentido editorial. Después validar subtítulos sencillos y un preset reutilizable de estilo en una nueva timeline de prueba, incluyendo revisión de color HLG y mezcla estéreo.
 
 ## Dirección creativa confirmada
 
-Humor con cortes rápidos y referencias Rubius + HolaSoyGerman adaptadas a una identidad propia. Subtítulos con color puntual, frases destacadas, zooms, temblores, blur, transiciones y acentos sonoros. Priorizar rostro visible, voz clara y timing cómico. Próximo paso: un clip de muestra para calibrar el estilo y validar los efectos en Resolve.
+Video vertical, cámara estática y usuario a cámara. Humor rápido inspirado en Rubius y HolaSoyGerman con identidad propia: subtítulos llamativos con color selectivo, frases destacadas, zooms, temblores, blur, transiciones y sonidos según el remate. Mantener rostro visible, voz clara y pausas cómicas. Retención como objetivo a medir.
