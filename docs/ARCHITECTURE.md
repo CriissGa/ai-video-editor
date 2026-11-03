@@ -38,7 +38,7 @@ El flujo debe permitir repetir una exportación sin volver a pedir decisiones al
 - Registro de etapas completadas y artefactos producidos para reanudar sin duplicar operaciones.
 - Caché vinculada al contenido de entrada y a los parámetros relevantes, con invalidación cuando cambien.
 
-Estas interfaces todavía no están implementadas. Definir el esquema mínimo con el primer caso real, evitando generalizar antes de probarlo.
+La primera herramienta implementada es `scripts/diagnose_resolve.py`: CLI de lectura para macOS, salida JSON versionada y subproceso con tiempo límite usando ResolvePython. Comprueba versión y acceso al gestor sin obtener proyectos. El resto de estas interfaces todavía no está implementado. Definir el esquema mínimo con el primer caso real, evitando generalizar antes de probarlo.
 
 ## Primer alcance propuesto
 
@@ -54,7 +54,7 @@ Un archivo hablado, un segmento indicado por tiempos, timeline vertical de 1080 
 
 ## Verificación pendiente
 
-Confirmar versión instalada, acceso de scripting, importación, montaje por rangos, subtítulos y render. Después probar tres videos representativos y medir correcciones manuales, tiempo de proceso y consumo de IA.
+Versión y acceso de scripting confirmados con Studio 21.1.2.10 (ver `RESOLVE_DIAGNOSTIC.md`). Pendiente: importación, montaje por rangos, subtítulos y render. Después probar tres videos representativos y medir correcciones manuales, tiempo de proceso y consumo de IA.
 
 ## Dirección creativa y eventos de edición
 

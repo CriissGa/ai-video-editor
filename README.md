@@ -4,7 +4,7 @@ Automatización local para producir Shorts, Reels y TikToks con DaVinci Resolve 
 
 ## Estado
 
-Planificación y estructura documental inicial. Aún no hay herramientas de edición implementadas ni integración con Resolve probada en este proyecto.
+Primer diagnóstico local implementado y verificado con DaVinci Resolve Studio 21.1.2.10. Todavía no hay operaciones de edición implementadas.
 
 Repositorio privado: [CriissGa/ai-video-editor](https://github.com/CriissGa/ai-video-editor).
 
@@ -24,6 +24,12 @@ La selección automática de segmentos y una interfaz propia se evaluarán despu
 
 ## Uso
 
-Abrir esta carpeta con el agente y continuar desde `docs/STATUS.md`. No existen comandos de instalación o ejecución todavía.
+Abrir esta carpeta con el agente y continuar desde `docs/STATUS.md`. Para comprobar la conexión en macOS con Resolve abierto:
+
+```sh
+python3 scripts/diagnose_resolve.py
+```
+
+Sin paquetes adicionales. Consulta [uso, resultados y resolución de errores](docs/RESOLVE_DIAGNOSTIC.md).
 
 Los medios originales, cachés, transcripciones y exportaciones se mantendrán fuera de la documentación y del control de versiones. Su ubicación se definirá durante la primera implementación.

@@ -2,7 +2,7 @@
 
 ## Situación actual
 
-Fase: planificación. Documentación local inicial creada. No hay código de edición, dependencias instaladas ni pruebas de integración ejecutadas.
+Fase: primer diagnóstico local completado. CLI reutilizable en `scripts/diagnose_resolve.py`, sin dependencias externas. Conexión real de lectura verificada; no hay código de edición todavía.
 
 Repositorio privado creado: https://github.com/CriissGa/ai-video-editor. Git y GitHub CLI (`gh`) están disponibles y la autenticación fue verificada. La documentación inicial y `.gitignore` constituyen el primer hito versionado.
 
@@ -19,18 +19,18 @@ El usuario autorizó commits y push al cerrar hitos verificados y pidió usar te
 ## Pendientes que afectan el alcance
 
 - Video de muestra y referencia del resultado deseado.
-- Versión instalada de Resolve y acceso efectivo a scripting.
+- Importación, montaje, subtítulos y render todavía sin comprobar.
 - Afinar tipografía, paleta e intensidad de efectos con una muestra.
 - Ubicación de medios y artefactos de trabajo.
 - Presupuesto y límites de IA, después de medir un caso representativo.
 
 ## Siguiente paso
 
-Definir con el usuario el material de entrada y el resultado esperado para un primer video. Con ese ejemplo, concretar el MVP y realizar una prueba mínima de importación, montaje por tiempos y render en un proyecto de prueba de Resolve.
+Elegir un clip vertical y un segmento por tiempos; definir el plan JSON mínimo y su validación antes de probar importación, montaje y render en un proyecto de prueba separado.
 
 ## Orden de implementación propuesto
 
-1. Validar conexión y capacidades de Resolve.
+1. Conexión básica verificada; validar capacidades de edición en proyecto de prueba.
 2. Definir el plan JSON mínimo y su validación.
 3. Ejecutar cortes indicados manualmente y exportar un borrador editable.
 4. Añadir subtítulos y estilo reutilizable.
@@ -39,7 +39,7 @@ Definir con el usuario el material de entrada y el resultado esperado para un pr
 
 ## Última actualización
 
-Se preparó la estructura Markdown inicial. Las capacidades de la integración se consultaron durante la planificación, pero aún no se comprobaron con medios reales en esta instalación.
+Hito de diagnóstico (2026-11-03, America/Phoenix): instalación 21.1.2; API real DaVinci Resolve Studio 21.1.2.10, gestor accesible, ResolvePython 3.14.4, salida `ok` y código 0 fuera del sandbox. Dentro del sandbox devolvió `unreachable` aun con Resolve abierto. Se inició la aplicación y se dejó abierta; no se ejecutaron llamadas de apertura, creación, guardado o modificación de proyectos. Tres pruebas unitarias aprobadas. Detalles y límites en `docs/RESOLVE_DIAGNOSTIC.md`. No se usaron medios reales.
 
 ## Dirección creativa confirmada
 
