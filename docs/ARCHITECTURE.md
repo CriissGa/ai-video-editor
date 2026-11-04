@@ -102,3 +102,6 @@ La revisión corta incorpora `caption_animation.py` para tamaño adaptativo y en
 
 
 `update_motion.py` modifica keyframes, pivotes y expresiones en composiciones existentes, validando proyecto, timeline única, rangos y nodos antes de cambiar. Reutiliza zoom/acento y añade Blur solo si falta: no reconstruye montaje, títulos o pistas. Intensidades, tiempos y sonidos adicionales se mantienen en el plan privado de cada revisión. Se comprobó una actualización de los 17 planos en dos lotes y doce SFX añadidos a la pista existente.
+
+
+Las revisiones privadas de títulos admiten `emphasis_variant` (cinco entradas en `emphasis_expressions`) y registran `focus_coverage` por tiempo visible. `style_titles` conserva StyledText editable y asigna color selectivo a variantes temáticas. Estos campos son propios del ejecutor de revisión, aún no del validador general de planes.

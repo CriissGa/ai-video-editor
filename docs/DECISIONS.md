@@ -109,3 +109,8 @@ El usuario reiteró los efectos tras la pregunta sobre el riesgo; prueba de un c
 
 
 La revisión posterior solicitó más frecuencia de acercamientos/barridos y doce sonidos adicionales en la misma timeline. Esos valores se guardan en el plan de esta edición; no fijan una cadencia universal del estilo. Preferir actualizar nodos existentes frente a reconstruir el montaje al cambiar intensidad.
+
+
+## D015 — Énfasis semántico aproximado al 25 %
+
+Medir la duración visible de los títulos destacados respecto a la timeline, con objetivo aproximado del 25 % solicitado. Elegir conceptos importantes/remates; variar animación y color por intención. Mantener Text+ independientes y alternancia de encuadres con acercamientos suaves, sin perder rostro; revisión visual necesaria y pivotes todavía manuales.

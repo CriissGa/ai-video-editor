@@ -68,3 +68,5 @@ Para la historia actual, el usuario pidió unos 2–2½ minutos; no es una durac
 
 
 Preferencia actual: trabajar en un solo proyecto/timeline (`AI Editor - Prueba 1`), revisar directamente en Resolve sin renderizar cada cambio y mantener todo editable. Zooms progresivos suaves desde encuadre completo hacia la cara; no perder encuadre. Variar animaciones de texto. El usuario quiere subtítulos como elementos accesibles de timeline; Fusion por clip es la implementación actual, no dar por satisfecha una pista independiente. Limpieza de proyectos de prueba propios autorizada, con respaldo DRP previo.
+
+Preferencia adicional: más variedad de animación Text+ y énfasis semántico aproximadamente durante el 25 % del video (medir tiempo visible, no exigir cuota exacta). Variar escala/encuadre entre cortes y mantener movimiento suave hacia el rostro. No garantizar encuadre facial sin revisar; pivotes actuales manuales.

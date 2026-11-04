@@ -82,9 +82,13 @@ def style_titles(timeline, plan):
         if caption['emphasis'] and 'caption_emphasis' in plan:
             from caption_animation import emphasis_expressions
             size=min(plan['caption_emphasis']['size'],1.66/max(len(line) for line in caption['text'].splitlines()))
-            variant=emphasis_index%3;emphasis_index+=1
+            variant=caption.get('emphasis_variant',emphasis_index%3);emphasis_index+=1
             a,b=emphasis_expressions(begin,end,size,variant)
             text.SetInput('Thickness2',plan['caption_emphasis']['outline'])
+            if variant == 2:
+                text.SetInput('Green1',1.0);text.SetInput('Blue1',1.0);text.SetInput('Red1',0.25)
+            elif variant == 3:
+                text.SetInput('Red1',1.0);text.SetInput('Green1',0.45);text.SetInput('Blue1',0.70)
         else:
             a,b=kinetic_expressions(begin,end,size,variant)
         text.Size.SetExpression(a);text.Center.SetExpression(b)

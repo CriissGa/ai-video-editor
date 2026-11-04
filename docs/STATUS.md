@@ -1,5 +1,13 @@
 # Estado del proyecto
 
+## Revisión vigente — énfasis semántico y encuadres variados (2026-11-03)
+
+Mismo proyecto y única timeline de 63.733 s. Los 124 elementos de V2 son títulos Text+ nativos editables en Inspector, no pista nativa de subtítulos. Se ampliaron los énfasis de diez a 28: 15.433 s / **24.22 % del tiempo total** (aproximación al 25 % pedido). Cinco variantes de entrada; amarillo para focos, cian para idioma/acento y rosa para determinados remates. Selección semántica persistida en `outputs/workspace/caption-focus-plan.json`; no traducción ni normalización de lo hablado.
+
+Los 17 planos alternan escala de arranque y conservan progresivos hacia pivotes faciales manuales, 17 acentos de zoom, ocho shakes y 12 barridos. Se mantuvieron los 26 SFX y las pistas habilitadas. Verificados tres fotogramas compuestos: texto legible sin cortar el rostro en esas muestras; no seguimiento automático ni revisión de todos los frames. Sin nuevo proyecto/timeline, render completo, AddTrack o cierre observado. Copias DRP antes/después (`before-caption-focus.drp`, `caption-focus-editable.drp`). 34 pruebas aprobadas.
+
+**Próximo paso:** reproducir la timeline para valorar las cinco entradas, cobertura del énfasis y continuidad de encuadres; revisar los errores pendientes del reconocimiento bilingüe contra el audio.
+
 ## Revisión vigente — más acercamientos, barridos y sonidos (2026-11-03)
 
 El usuario pidió aumentar movimiento y sonidos en esta última edición. Se actualizó la **misma timeline**, sin cambiar sus cortes ni sus 63.733 s: 17 planos, 124 Text+ independientes, V1/V2 y A1/A2. Plan privado `outputs/workspace/extra-motion-plan.json`; respaldo antes y después (`before-extra-motion.drp`, `extra-motion-editable.drp`).

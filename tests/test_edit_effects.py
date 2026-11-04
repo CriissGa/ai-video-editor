@@ -65,6 +65,16 @@ class EffectsTests(unittest.TestCase):
         self.assertGreater(evaluate(zoom,0),1)
         self.assertTrue(samples)
 
+    def test_five_caption_entrances_settle_without_drift(self):
+        from caption_animation import emphasis_expressions
+        starts=[]
+        for variant in range(5):
+            size,center=emphasis_expressions(10,40,.16,variant)
+            self.assertAlmostEqual(evaluate(size,20),.16)
+            self.assertEqual(evaluate(center,20),(.5,.24))
+            starts.append((evaluate(size,12),evaluate(center,12)))
+        self.assertEqual(len(set(starts)),5)
+
     def test_preserve_mixed_language_and_spoken_grammar(self):
         plan = {'timeline': {'fps': 30}, 'segments': [{'in_seconds': 0, 'out_seconds': 2}]}
         transcript = {'fps': 30, 'source_frames': 60, 'words': [
