@@ -96,3 +96,6 @@ La revisión corta incorpora `caption_animation.py` para tamaño adaptativo y en
 
 
 `timeline_titles.py` separa los Text+ en V2 mediante una semilla nativa y adaptación DRT limitada a Studio 21.1.2.10. Exige una base con dos pistas nativas de cada tipo; conserva sus IDs, metadatos de registro y buses, reemplazando solo los clips de V2. Crear pistas copiando nodos XML no basta para que compongan/salgan al bus y se descarta. La base provino de importación XML de Resolve; la adaptación del DRT es específica de versión, no un contrato público estable. `style_titles` configura texto/estilo/entradas sin incrustarlos en cámara. Verificar fotograma compuesto, enlaces de audio y salida real además de conteos.
+
+
+`tighten_plan.py` cruza niveles RMS por frame de PCM mono con palabras cacheadas para recortar solo silencios no protegidos; persiste tramos/resultados y conserva márgenes. `rebuild_timing.py` actualiza clips de una primera fuente en DRT propio, manteniendo referencias de medios y registro nativo V1/V2/A1/A2; no crea pistas. Tras importar se comprueban offsets/duraciones y se aplican composiciones de cámara por lotes. El plan privado de revisión añade `face` por segmento y `caption_emphasis`; no son todavía campos del validador general v1/v2/v3. Los efectos que atraviesan un corte usan tiempos negativos entre paréntesis para no generar comentarios Lua.

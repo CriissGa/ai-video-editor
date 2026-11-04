@@ -64,6 +64,7 @@ def style_titles(timeline, plan):
         require(item.GetStart()==origin+round(caption['in_seconds']*fps) and item.GetDuration()==round(caption['out_seconds']*fps)-round(caption['in_seconds']*fps), 'Tiempo de título incorrecto')
         require(item.GetFusionCompCount()==1, 'Título sin composición')
     checks=[]
+    emphasis_index=0
     for index,(item,caption) in enumerate(zip(titles,plan['captions'])):
         comp=item.GetFusionCompByIndex(1)
         text=comp.FindTool('Template')
@@ -78,7 +79,14 @@ def style_titles(timeline, plan):
         for key,value in settings.items():text.SetInput(key,value)
         begin=int(comp.GetAttrs()['COMPN_RenderStart']);end=begin+int(item.GetDuration())
         variant=(index%3) if caption['emphasis'] else ((index//4)%3)
-        a,b=kinetic_expressions(begin,end,size,variant)
+        if caption['emphasis'] and 'caption_emphasis' in plan:
+            from caption_animation import emphasis_expressions
+            size=min(plan['caption_emphasis']['size'],1.66/max(len(line) for line in caption['text'].splitlines()))
+            variant=emphasis_index%3;emphasis_index+=1
+            a,b=emphasis_expressions(begin,end,size,variant)
+            text.SetInput('Thickness2',plan['caption_emphasis']['outline'])
+        else:
+            a,b=kinetic_expressions(begin,end,size,variant)
         text.Size.SetExpression(a);text.Center.SetExpression(b)
         item.SetName(caption['text'].replace('\n',' '))
         require(text.GetInput('StyledText')==caption['text'], 'Texto no conservado')

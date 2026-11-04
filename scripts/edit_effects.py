@@ -34,16 +34,16 @@ def effect_expressions(events, fps, offset, duration, local_start, base_zoom):
         end = frame(event['out_seconds'], fps) - offset + local_start
         if start >= local_start + duration or end <= local_start:
             continue
-        ramp = 'iif(time >= %d and time < %d, min(1, max(0, (time-%d+1)/3), max(0, (%d-time)/4)), 0)' % (start, end, start, end)
+        ramp = 'iif(time >= %d and time < %d, min(1, max(0, (time-(%d)+1)/3), max(0, (%d-time)/4)), 0)' % (start, end, start, end)
         if event['type'] == 'punch_zoom':
             zoom_terms.append('(1 + %.8f*(%s))' % (event['amount'] - 1, ramp))
         elif event['type'] == 'shake':
             # El leve sobreescaneo evita bordes negros durante el desplazamiento.
             zoom_terms.append('(1 + 0.04*(%s))' % ramp)
-            x_terms.append('%.8f*sin((time-%d)*2.4)*(%s)' % (event['amount'], start, ramp))
-            y_terms.append('%.8f*sin((time-%d)*3.1)*(%s)' % (event['amount'] * 0.65, start, ramp))
+            x_terms.append('%.8f*sin((time-(%d))*2.4)*(%s)' % (event['amount'], start, ramp))
+            y_terms.append('%.8f*sin((time-(%d))*3.1)*(%s)' % (event['amount'] * 0.65, start, ramp))
         else:
-            envelope = 'iif(time >= %d and time < %d, 1-(time-%d)/%d, 0)' % (start,end,start,end-start)
+            envelope = 'iif(time >= %d and time < %d, 1-(time-(%d))/%d, 0)' % (start,end,start,end-start)
             zoom_terms.append('(1+0.18*(%s))' % envelope)
             x_terms.append('%.8f*(%s)' % (event['amount'],envelope))
         sample = max(local_start, min(local_start + duration - 1, (start + end) // 2))
@@ -74,5 +74,5 @@ def whip_blur_expression(events,fps,offset,duration,local_start):
         a=frame(event['in_seconds'],fps)-offset+local_start
         b=frame(event['out_seconds'],fps)-offset+local_start
         if a>=local_start+duration or b<=local_start:continue
-        terms.append('iif(time >= %d and time < %d, 10*(1-(time-%d)/%d), 0)'%(a,b,a,b-a))
+        terms.append('iif(time >= %d and time < %d, 10*(1-(time-(%d))/%d), 0)'%(a,b,a,b-a))
     return '+'.join(terms) if terms else '0'

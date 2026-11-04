@@ -21,3 +21,14 @@ def kinetic_expressions(begin, end, size, variant=0):
     if variant == 2:
         return '%.9f*(1.10-0.10*min(1,max(0,(%s+1)/5)))' % (size,elapsed), 'Point(0.5+0.025*(1-min(1,max(0,(%s+1)/5))),0.24)' % elapsed
     return '%.9f*%s' % (size,scale), 'Point(0.5,0.24-0.025*(1-min(1,max(0,(%s+1)/4))))' % elapsed
+
+
+def emphasis_expressions(begin, end, size, variant):
+    """Entradas más marcadas, con recuperación rápida para no tapar el remate."""
+    require(begin < end and size > 0 and variant in (0,1,2), 'Énfasis inválido')
+    t='min(1,max(0,(time-%d)/6))' % begin
+    if variant == 0:
+        return '%.9f*(0.65+0.35*%s+0.22*sin(%s*3.14159265))' % (size,t,t), 'Point(0.5,0.24)'
+    if variant == 1:
+        return '%.9f*(1.12-0.12*%s)' % (size,t), 'Point(0.5+0.06*(1-%s)*(1-%s),0.24)' % (t,t)
+    return '%.9f*(0.78+0.22*%s+0.12*sin(%s*3.14159265))' % (size,t,t), 'Point(0.5,0.24+0.05*(1-%s)*(1-%s))' % (t,t)

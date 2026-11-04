@@ -58,6 +58,13 @@ class EffectsTests(unittest.TestCase):
         self.assertEqual(evaluate(zoom, 0), 1)
         self.assertEqual(evaluate(center, 0), (0.5, 0.5))
 
+    def test_event_crossing_cut_does_not_generate_lua_comment(self):
+        zoom,center,samples=effect_expressions([self.zoom,self.shake],30,40,30,0,1.0)
+        self.assertNotIn('time--',zoom)
+        self.assertNotIn('time--',center)
+        self.assertGreater(evaluate(zoom,0),1)
+        self.assertTrue(samples)
+
     def test_preserve_mixed_language_and_spoken_grammar(self):
         plan = {'timeline': {'fps': 30}, 'segments': [{'in_seconds': 0, 'out_seconds': 2}]}
         transcript = {'fps': 30, 'source_frames': 60, 'words': [

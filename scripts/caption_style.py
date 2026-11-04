@@ -66,6 +66,8 @@ def apply_style(timeline, plan, run_dir, start_index=0, end_index=None):
             continue
         if end_index is not None and index >= end_index:
             break
+        face=segment.get('face',[0.5,0.5])
+        require(isinstance(face,list) and len(face)==2 and all(number(v) and 0<=v<=1 for v in face), 'Pivote facial inválido')
         require(item.GetFusionCompCount() == 0, 'Clip ya tiene composición; evitar duplicados')
         comp = item.AddFusionComp()
         require(comp is not None, 'No se pudo crear composición Fusion')
@@ -88,6 +90,7 @@ def apply_style(timeline, plan, run_dir, start_index=0, end_index=None):
                 for key,value in adjustments.items():
                     camera.SetInput(key,value)
                     require(abs(camera.GetInput(key)-value)<0.00001,'Ajuste de cámara no aplicado')
+        transform.SetInput('Pivot',{1:face[0],2:face[1]})
         require(transform.ConnectInput('Input', camera), 'No se pudo conectar zoom')
         transform.SetInput('Size', segment['zoom'])
         require(abs(transform.GetInput('Size') - segment['zoom']) < 0.0001, 'Zoom no aplicado')
@@ -106,6 +109,7 @@ def apply_style(timeline, plan, run_dir, start_index=0, end_index=None):
             if moving:
                 accent = comp.AddTool('Transform')
                 accent.SetAttrs({'TOOLS_Name':'AIEditor_Accents'})
+                accent.SetInput('Pivot',{1:face[0],2:face[1]})
                 require(accent.ConnectInput('Input',transform), 'No se pudo conectar acento')
             checked = apply_effects(accent, events, fps, offset, duration, local_start, 1.0 if moving else segment['zoom'])
             effect_checks.append({'segment': index + 1, 'samples': checked})

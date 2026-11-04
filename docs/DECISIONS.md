@@ -101,3 +101,8 @@ Preferencia explícita del usuario: continuar en un solo proyecto con una timeli
 ## D013 — Text+ independientes y separación de efectos
 
 Solicitud explícita: títulos Text+ individuales en V2, imagen/zooms en V1 y SFX en una sola pista A2. Mantener español/inglés originales; el usuario confirmó el saludo español. Montaje completo de la primera fuente con esperas recortadas. Revisar en Resolve sin render rutinario; se admite una muestra diagnóstica breve para comprobar audio. No declarar completados zooms/temblores mientras la aplicación Fusion esté bloqueada por revisión automática.
+
+
+## D014 — Movimiento marcado y recorte de silencios protegido
+
+El usuario reiteró los efectos tras la pregunta sobre el riesgo; prueba de un clip y luego lotes pequeños con respaldo. Usar zoom progresivo más acentos breves/temblores y barridos de blur en cambios de sección, con rostro visible y títulos independientes estables. Silencios refinados con energía local y protección de palabras, conservando revisión humana. Destacados mayores y tres entradas más marcadas; ajustar palabras largas para que quepan. No usar AddTrack ni generar proyectos nuevos. Una ejecución sin cierre no resuelve la causa de los fallos históricos.
