@@ -93,3 +93,6 @@ La revisión corta incorpora `caption_animation.py` para tamaño adaptativo y en
 
 
 `revise_workspace.py` modifica las composiciones existentes de una sola timeline propia, sin crear proyectos/pistas ni renderizar: zoom de dos keyframes con pivote facial manual, anulación de desplazamientos de acento y variantes de entrada Text+. La revisión usa parámetros persistidos privadamente en `outputs/workspace/revision-plan.json`; no incorpora seguimiento facial. Respaldos DRP y manifiesto de limpieza son artefactos locales privados.
+
+
+`timeline_titles.py` separa los Text+ en V2 mediante una semilla nativa y adaptación DRT limitada a Studio 21.1.2.10. Exige una base con dos pistas nativas de cada tipo; conserva sus IDs, metadatos de registro y buses, reemplazando solo los clips de V2. Crear pistas copiando nodos XML no basta para que compongan/salgan al bus y se descarta. La base provino de importación XML de Resolve; la adaptación del DRT es específica de versión, no un contrato público estable. `style_titles` configura texto/estilo/entradas sin incrustarlos en cámara. Verificar fotograma compuesto, enlaces de audio y salida real además de conteos.

@@ -96,3 +96,8 @@ El usuario pide trabajar solo con `prueba.MOV` para ahorrar tokens, color más s
 ## D012 — Un proyecto de trabajo y revisión sin render
 
 Preferencia explícita del usuario: continuar en un solo proyecto con una timeline, audio visible/editable y zoom continuo conservador hacia la cara. No generar otro proyecto o render en cada iteración. Conservar copias DRP antes de limpiar proyectos de prueba propios. Variar entradas de texto. Los títulos Fusion actuales no equivalen a bloques independientes en pista; queda pendiente esa mejora. No añadir pistas en la timeline Fusion cargada.
+
+
+## D013 — Text+ independientes y separación de efectos
+
+Solicitud explícita: títulos Text+ individuales en V2, imagen/zooms en V1 y SFX en una sola pista A2. Mantener español/inglés originales; el usuario confirmó el saludo español. Montaje completo de la primera fuente con esperas recortadas. Revisar en Resolve sin render rutinario; se admite una muestra diagnóstica breve para comprobar audio. No declarar completados zooms/temblores mientras la aplicación Fusion esté bloqueada por revisión automática.
