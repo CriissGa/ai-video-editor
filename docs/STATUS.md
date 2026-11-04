@@ -1,5 +1,15 @@
 # Estado del proyecto
 
+## Revisión vigente — más acercamientos, barridos y sonidos (2026-11-03)
+
+El usuario pidió aumentar movimiento y sonidos en esta última edición. Se actualizó la **misma timeline**, sin cambiar sus cortes ni sus 63.733 s: 17 planos, 124 Text+ independientes, V1/V2 y A1/A2. Plan privado `outputs/workspace/extra-motion-plan.json`; respaldo antes y después (`before-extra-motion.drp`, `extra-motion-editable.drp`).
+
+- Progresivos con escalas iniciales/finales variables hasta 1.24, **17 acentos de zoom** (antes 10), **ocho temblores** (antes seis) y **12 barridos** (antes seis). Pivotes manuales por plano; se corrigió el sentido de un barrido y su pivote al revisar el encuadre. Se revisaron seis muestras de cámara y dos compuestas; rostro/rasgos visibles en esas muestras, sin afirmar tracking facial ni revisar todos los frames. Los acercamientos extremos pueden cortar cabello por arriba.
+- **26 SFX online** en A2 (antes 14): doce acentos breves añadidos sin superponer clips, ganancias -7 dB y fundidos de un frame. Se conservaron los sonidos anteriores, los títulos y la voz. Muestra aislada de tres segundos con nuevos sonidos exportada Complete; pico de muestra PCM -11.98 dBFS y 34386 muestras no nulas. No es true peak ni escucha completa de la mezcla. Voz y SFX restablecidos/habilitados y configuración de render devuelta a pieza completa/1080×1920.
+- Verificados por API escalas inicial/intermedia/final en los 17 planos, expresiones evaluables, posiciones/ganancias/enlaces de los 26 sonidos, una timeline y dos pistas por tipo. 33 pruebas aprobadas. Sin cierres observados ni AddTrack; no se creó proyecto/timeline ni render completo.
+
+**Próximo paso:** reproducir esta revisión directamente en Resolve para valorar si los acercamientos y sonidos ya tienen la fuerza deseada; ajustar momentos concretos. Estos valores corresponden a esta revisión, no son una cadencia obligatoria para todos los videos futuros.
+
 ## Revisión vigente — movimiento y cortes más agresivos (2026-11-03)
 
 El usuario renovó la petición de aplicar zooms/temblores después de la pregunta informada sobre el riesgo. Se probó primero un clip con respaldo; funcionó. No hubo nuevos cierres observados en esta revisión. Proyecto `AI Editor - Prueba 1`, **una sola timeline** `Prueba 1 - Edicion principal`, 1912 frames / **63.733 s**, 17 planos. Respaldo anterior y final en `outputs/workspace/` (`before-punchier.drp`, final `punchier-safe-text.drp`).

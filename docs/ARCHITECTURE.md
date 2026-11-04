@@ -99,3 +99,6 @@ La revisión corta incorpora `caption_animation.py` para tamaño adaptativo y en
 
 
 `tighten_plan.py` cruza niveles RMS por frame de PCM mono con palabras cacheadas para recortar solo silencios no protegidos; persiste tramos/resultados y conserva márgenes. `rebuild_timing.py` actualiza clips de una primera fuente en DRT propio, manteniendo referencias de medios y registro nativo V1/V2/A1/A2; no crea pistas. Tras importar se comprueban offsets/duraciones y se aplican composiciones de cámara por lotes. El plan privado de revisión añade `face` por segmento y `caption_emphasis`; no son todavía campos del validador general v1/v2/v3. Los efectos que atraviesan un corte usan tiempos negativos entre paréntesis para no generar comentarios Lua.
+
+
+`update_motion.py` modifica keyframes, pivotes y expresiones en composiciones existentes, validando proyecto, timeline única, rangos y nodos antes de cambiar. Reutiliza zoom/acento y añade Blur solo si falta: no reconstruye montaje, títulos o pistas. Intensidades, tiempos y sonidos adicionales se mantienen en el plan privado de cada revisión. Se comprobó una actualización de los 17 planos en dos lotes y doce SFX añadidos a la pista existente.

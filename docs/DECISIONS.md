@@ -106,3 +106,6 @@ Solicitud explícita: títulos Text+ individuales en V2, imagen/zooms en V1 y SF
 ## D014 — Movimiento marcado y recorte de silencios protegido
 
 El usuario reiteró los efectos tras la pregunta sobre el riesgo; prueba de un clip y luego lotes pequeños con respaldo. Usar zoom progresivo más acentos breves/temblores y barridos de blur en cambios de sección, con rostro visible y títulos independientes estables. Silencios refinados con energía local y protección de palabras, conservando revisión humana. Destacados mayores y tres entradas más marcadas; ajustar palabras largas para que quepan. No usar AddTrack ni generar proyectos nuevos. Una ejecución sin cierre no resuelve la causa de los fallos históricos.
+
+
+La revisión posterior solicitó más frecuencia de acercamientos/barridos y doce sonidos adicionales en la misma timeline. Esos valores se guardan en el plan de esta edición; no fijan una cadencia universal del estilo. Preferir actualizar nodos existentes frente a reconstruir el montaje al cambiar intensidad.
